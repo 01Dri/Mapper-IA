@@ -20,6 +20,16 @@ Atualmente, o **Mapper IA** oferece a função de **mapeamento de texto de PDF p
 
 O **Mapper IA** está em desenvolvimento, e novas funcionalidades estão sendo planejadas e implementadas para melhorar a experiência do usuário e a eficiência do mapeamento.
 
+
+## Tecnologias Utilizadas
+
+O **Mapper IA** é construído com as seguintes tecnologias:
+
+- **C#**: A linguagem de programação principal utilizada para desenvolver a lógica do projeto.
+- **JsonSerializer**: Para serialização e desserialização de dados em formato JSON, facilitando a troca de informações entre o aplicativo e a IA.
+- **iText 7**: Uma biblioteca poderosa para manipulação de arquivos PDF, utilizada para extrair texto e informações dos documentos.
+- **Gemini IA**: A IA que está integrada ao projeto, fornecendo suporte para o mapeamento de dados e facilitando a extração de informações relevantes.
+
 ## Como Contribuir
 
 Contribuições são muito bem-vindas! Se você tiver ideias ou sugestões para melhorar o projeto, fique à vontade para abrir uma issue ou enviar um pull request.
