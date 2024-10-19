@@ -23,7 +23,7 @@ public class PDFMapperTests
 
 
     [Fact]
-    public async Task Test_PDF_Converter_Should_To_Map_CourseName_And_Projects_On_CV_WithGeminiConverter()
+    public async Task Test_PDF_Converter_Should_To_Map_CourseName_And_Projects_On_CV_With_GeminiConverter()
     {
         var pdfPath = Path.Combine(@"../../../PDFMapper/PDFs/Curriculo - Diego.pdf");
         CurriculumModel curriculumModel =  await _pdfMapper.Map<CurriculumModel>(pdfPath);

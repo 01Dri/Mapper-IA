@@ -23,7 +23,6 @@ public abstract class BaseConverters
                 WriteIndented = true // Identação do JSON
             };
         }
-
         HttpClient = new HttpClient();
     }
 }

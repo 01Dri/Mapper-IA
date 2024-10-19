@@ -15,7 +15,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     }
     public async Task<T> SendPrompt<T>(string content) where T : class, new()
     {
-        T obj = new T();
+        T? obj = new T();
         EntityInitializer.Initialize(obj);
         var contentJson = JsonSerializer.Serialize(content, this.Options.jsonSerializerOptions);
         var objJson = JsonSerializer.Serialize(obj, this.Options.jsonSerializerOptions);
@@ -34,8 +34,8 @@ public class GeminiConverter : BaseConverters, IConverterIA
             {
                 var responseData = await response.Content.ReadAsStringAsync();
                 var responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.jsonSerializerOptions);
-                obj = JsonSerializer.Deserialize<T>(this.ParseJsonIAResponse(responseObject), this.Options.jsonSerializerOptions);
-                return obj;
+                obj = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.jsonSerializerOptions);
+                return obj ?? throw new ConverterException("Não foi possível converter.");
             }
             throw new IARequestStatusException($"Ocorreu uma falha na requisição: {response.StatusCode}");
         }
@@ -71,7 +71,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
         };
     }
 
-    private string ParseJsonIAResponse(GeminiPromptResponse? response)
+    private string ParseJsonResponseIA(GeminiPromptResponse? response)
     {
         if (response == null) throw new IAResponseException("IA Response é nulo.");
         var candidate = response.Candidates.FirstOrDefault();
