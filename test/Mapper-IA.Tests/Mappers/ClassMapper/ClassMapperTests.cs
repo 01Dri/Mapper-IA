@@ -33,7 +33,13 @@ public class ClassMapperTests
             Ativo = true,
             Salario = 5000.00m,
             Cargo = "Desenvolvedor",
-            Departamento = "TI"
+            Departamento = "TI",
+            Test3s = new List<Test3>(){new Test3()
+            {
+                Id = 1,
+                Admin = true,
+                Setor = "Testee"
+            }}
         };
         
         Test2 test2 = await _classMapper.Map<Test1, Test2>(test1);
@@ -44,6 +50,7 @@ public class ClassMapperTests
         Assert.True(test2.Ativo);
         Assert.Equal(5000.00m, test2.Salario);
         Assert.Equal(test1.DataNascimento, test2.DataNascimento);
+        Assert.Equal(test1.Test3s.Count, test2.Test3Dtos.Count);
 
         
     }
@@ -62,6 +69,8 @@ class Test1
         public decimal Salario { get; set; }
         public string Cargo { get; set; }
         public string Departamento { get; set; }
+        public List<Test3> Test3s { get; set; } = new List<Test3>();
+
 
 }
 
@@ -72,6 +81,20 @@ class Test2
     public string Email { get; set; }
     public bool Ativo { get; set; }
     public decimal Salario { get; set; }
-    
     public DateTime DataNascimento { get; set; }
+
+    public List<Test3DTO> Test3Dtos { get; set; } = new List<Test3DTO>();
+}
+
+class Test3
+{
+    public int Id { get; set; }
+    public string Setor { get; set; }
+    public bool Admin { get; set; }
+}
+
+class  Test3DTO 
+{
+    public string Setor { get; set; }
+    public bool Admin { get; set; }
 }
