@@ -29,14 +29,27 @@ public class PDFMapperTests
         CurriculumModel curriculumModel =  await _pdfMapper.Map<CurriculumModel>(pdfPath);
         Assert.Equal("Uninter", curriculumModel.Faculdade);
         Assert.Equal("Análise e desenvolvimento de sistemas EAD", curriculumModel.Curso);
+        Assert.Equal(2, curriculumModel.Projects.Count);
+        
+        var expectedProjectNames = new List<string> { "ReclameTrancoso", "VTHoftalon" };
+        var actualProjectNames = curriculumModel.Projects.Select(p => p.Nome).ToList();
+
+        Assert.Equal(expectedProjectNames, actualProjectNames);
 
     }
-}
+
+    public class CurriculumModel
+    {
+        public string Faculdade { get; set; }
+        public string Curso { get; set; }
+        public List<CurriculumProjects> Projects { get; set; }
+
+    }
 
 
-public class CurriculumModel
-{
-    public string Faculdade { get; set; }
-    public string Curso { get; set; }
-
+    public class CurriculumProjects
+    {
+        public string Nome { get; set; }
+        public List<string> Tecnologias { get; set; } = new List<string>();
+    }
 }

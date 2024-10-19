@@ -6,6 +6,7 @@ using ConvertersIA.Exceptions;
 using ConvertersIA.Interfaces;
 using ConvertersIA.Models.Gemini.Request;
 using ConvertersIA.Models.Gemini.Response;
+using Mapper_IA.EntitiesSetup;
 
 public class GeminiConverter : IConverterIA
 {
@@ -31,6 +32,7 @@ public class GeminiConverter : IConverterIA
     public async Task<T> SendPrompt<T>(string content) where T : class, new()
     {
         T obj = new T();
+        EntityInitializer.Initialize(obj);
         var contentJson = JsonSerializer.Serialize(content, _iaOptions.jsonSerializerOptions);
         var objJson = JsonSerializer.Serialize(obj, _iaOptions.jsonSerializerOptions);
         var promptRequest = this.CreatePromptRequest(objJson, contentJson);
@@ -54,7 +56,7 @@ public class GeminiConverter : IConverterIA
         }
         catch (Exception ex)
         {
-            throw new Exception("Ocorreu uma falha, causa: " + ex.Message);
+            throw new ConverterException("Ocorreu uma falha, causa: " + ex.Message);
         }
     }
 

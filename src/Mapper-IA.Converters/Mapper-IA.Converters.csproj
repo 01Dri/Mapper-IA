@@ -7,4 +7,8 @@
     <RootNamespace>ConvertersIA</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Mapper-IA.EntitiesSetup\Mapper-IA.EntitiesSetup.csproj" />
+  </ItemGroup>
+
 </Project>
