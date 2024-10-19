@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using ConvertersIA.Converters;
 using ConvertersIA.Converters.Configuration;
 using ConvertersIA.Exceptions;
 using ConvertersIA.Interfaces;
@@ -8,48 +8,33 @@ using ConvertersIA.Models.Gemini.Request;
 using ConvertersIA.Models.Gemini.Response;
 using Mapper_IA.EntitiesSetup;
 
-public class GeminiConverter : IConverterIA
+public class GeminiConverter : BaseConverters, IConverterIA
 {
-    private readonly HttpClient _httpClient;
-    private readonly IAOptions _iaOptions;
-
-    public GeminiConverter(IAOptions iaOptions )
+    public GeminiConverter(IAOptions iaOptions) : base(iaOptions)
     {
-        _httpClient = new HttpClient();
-        _iaOptions = iaOptions;
-        if (iaOptions.jsonSerializerOptions == null)
-        {
-            iaOptions.jsonSerializerOptions = new JsonSerializerOptions()
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.Never,
-                WriteIndented = true
-            };
-        }
-        if (string.IsNullOrEmpty(_iaOptions.Key)) throw new IAKeyException("API KEY Inválida!");
     }
-    
-
     public async Task<T> SendPrompt<T>(string content) where T : class, new()
     {
         T obj = new T();
         EntityInitializer.Initialize(obj);
-        var contentJson = JsonSerializer.Serialize(content, _iaOptions.jsonSerializerOptions);
-        var objJson = JsonSerializer.Serialize(obj, _iaOptions.jsonSerializerOptions);
+        var contentJson = JsonSerializer.Serialize(content, this.Options.jsonSerializerOptions);
+        var objJson = JsonSerializer.Serialize(obj, this.Options.jsonSerializerOptions);
         var promptRequest = this.CreatePromptRequest(objJson, contentJson);
         var promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
         try
         {
-            var response = await _httpClient.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={this._iaOptions.Key}",
+            var response = await this.HttpClient.PostAsync(
+                $"https://generativelanguage.googleapis.com/v1beta" +
+                $"/models/gemini-1.5-flash-latest:generateContent?key={this.Options.Key}",
                 mediaTypeRequest);
             
             if (response.IsSuccessStatusCode)
             {
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, _iaOptions.jsonSerializerOptions);
-                obj = JsonSerializer.Deserialize<T>(this.ParseJsonIAResponse(responseObject), _iaOptions.jsonSerializerOptions);
+                var responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.jsonSerializerOptions);
+                obj = JsonSerializer.Deserialize<T>(this.ParseJsonIAResponse(responseObject), this.Options.jsonSerializerOptions);
                 return obj;
             }
             throw new IARequestStatusException($"Ocorreu uma falha na requisição: {response.StatusCode}");
@@ -104,4 +89,5 @@ public class GeminiConverter : IConverterIA
 
         throw new IAResponseException("IA Response não possui texto.");
     }
+
 }
