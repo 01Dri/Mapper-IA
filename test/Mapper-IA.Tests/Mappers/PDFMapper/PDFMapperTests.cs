@@ -1,11 +1,9 @@
-using System.Text.Json;
-using ConvertersIA.Converters.Configuration;
+﻿using ConvertersIA.Converters.Configuration;
 using ConvertersIA.Interfaces;
 using Extractors;
-using MappersIA.PDFMapper;
 using MappersIA.PDFMapper.Interfaces;
 
-namespace Mapper_IA.Tests;
+namespace Mapper_IA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
 {
@@ -18,7 +16,7 @@ public class PDFMapperTests
             Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
         };
         IConverterIA geminiConverter = new GeminiConverter(iaOptions);
-        _pdfMapper = new PDFMapper(geminiConverter, new PDFExtractor());
+        _pdfMapper = new MappersIA.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
     }
 
 

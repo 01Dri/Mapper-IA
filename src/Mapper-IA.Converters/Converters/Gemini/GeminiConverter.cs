@@ -17,7 +17,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
         T? obj = new T();
         EntityInitializer.Initialize(obj);
-        var contentJson = JsonSerializer.Serialize(content, this.Options.jsonSerializerOptions);
+        var contentJson = GetContentJson(content);
         var objJson = JsonSerializer.Serialize(obj, this.Options.jsonSerializerOptions);
         var promptRequest = this.CreatePromptRequest(objJson, contentJson);
         var promptRequestJson = JsonSerializer.Serialize(promptRequest);
@@ -44,6 +44,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
             throw new ConverterException("Ocorreu uma falha, causa: " + ex.Message);
         }
     }
+
 
     private GeminiPromptRequest CreatePromptRequest(string objJson, string contentJson)
     {
@@ -88,6 +89,19 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
 
         throw new IAResponseException("IA Response não possui texto.");
+    }
+    
+    private string GetContentJson(string jsonString)
+    {
+        try
+        {
+            JsonDocument.Parse(jsonString);
+            return jsonString; 
+        }
+        catch (JsonException)
+        {
+            return JsonSerializer.Serialize(jsonString, this.Options.jsonSerializerOptions);
+        }
     }
 
 }
