@@ -10,7 +10,7 @@ using Mapper_IA.EntitiesSetup;
 
 public class GeminiConverter : BaseConverters, IConverterIA
 {
-    public GeminiConverter(IAOptions iaOptions) : base(iaOptions)
+    public GeminiConverter(OptionsIA optionsIa) : base(optionsIa)
     {
     }
     public async Task<T> SendPrompt<T>(string content) where T : class, new()

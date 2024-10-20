@@ -12,11 +12,11 @@ public class ClassMapperTests
 
     public  ClassMapperTests()
     {
-        IAOptions iaOptions = new IAOptions()
+        OptionsIA optionsIa = new OptionsIA()
         {
             Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
         };
-        IConverterIA geminiConverter = new GeminiConverter(iaOptions);
+        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
         _classMapper = new global::Mappers.ClassMapper.ClassMapper(geminiConverter);
     }
 

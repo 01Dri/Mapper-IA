@@ -7,16 +7,16 @@ namespace ConvertersIA.Converters;
 
 public abstract class BaseConverters
 {
-    protected readonly IAOptions Options;
+    protected readonly OptionsIA Options;
     protected readonly HttpClient HttpClient;
 
-    protected BaseConverters(IAOptions iaOptions)
+    protected BaseConverters(OptionsIA optionsIa)
     {
-        Options = iaOptions;
+        Options = optionsIa;
         if (string.IsNullOrEmpty(Options.Key)) throw new IAKeyException("API KEY Inválida!");
-        if (iaOptions.jsonSerializerOptions == null)
+        if (optionsIa.jsonSerializerOptions == null)
         {
-            iaOptions.jsonSerializerOptions = new JsonSerializerOptions()
+            optionsIa.jsonSerializerOptions = new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.Never, //Nunca vai ignorar qualquer propriedade não prsente no objeto
                                                                     //(Retornando null se necessário)
