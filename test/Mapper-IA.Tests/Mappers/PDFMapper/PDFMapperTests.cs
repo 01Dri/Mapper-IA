@@ -2,7 +2,7 @@
 using ConvertersIA.Interfaces;
 using Extractors;
 using MappersIA.PDFMapper.Interfaces;
-
+ 
 namespace Mapper_IA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
@@ -21,13 +21,14 @@ public class PDFMapperTests
 
 
     [Fact]
-    public async Task Test_PDF_Converter_Should_To_Map_CourseName_And_Projects_On_CV_With_GeminiConverter()
+    public async Task Test_PDF_Converter_Should_Map_PDF_To_Model_GeminiConverter()
     {
-        var pdfPath = Path.Combine(@"../../../PDFMapper/PDFs/Curriculo - Diego.pdf");
+        var pdfPath = Path.Combine(@"../../../Mappers/PDFMapper/PDFs/Curriculo - Diego.pdf");
         CurriculumModel curriculumModel =  await _pdfMapper.Map<CurriculumModel>(pdfPath);
         Assert.Equal("Uninter", curriculumModel.Faculdade);
-        Assert.Equal("Análise e desenvolvimento de sistemas EAD", curriculumModel.Curso);
+        Assert.Equal("Análise e desenvolvimento de sistemas", curriculumModel.Curso);
         Assert.Equal(2, curriculumModel.Projects.Count);
+        Assert.Equal("diegomagalhaesdev@gmail.com", curriculumModel.Email);
         
         var expectedProjectNames = new List<string> { "ReclameTrancoso", "VTHoftalon" };
         var actualProjectNames = curriculumModel.Projects.Select(p => p.Nome).ToList();
@@ -40,6 +41,8 @@ public class PDFMapperTests
     {
         public string Faculdade { get; set; }
         public string Curso { get; set; }
+        public string Email { get; set; }
+        
         public List<CurriculumProjects> Projects { get; set; }
 
     }

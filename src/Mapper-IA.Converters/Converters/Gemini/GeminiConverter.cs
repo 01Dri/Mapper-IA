@@ -58,13 +58,14 @@ public class GeminiConverter : BaseConverters, IConverterIA
                     {
                         new Parts()
                         {
-                            Text =
-                            $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {objJson}. " +
-                            $"Esse JSON deve ser preenchido com os seguintes valores: {contentJson}. " +
-                            $"O JSON retornado será utilizado em uma operação de deserialização, portanto, assegure-se de que ele está formatado corretamente para ser transformado em um objeto. " +
-                            $"A estrutura e os dados devem estar em conformidade com os requisitos especificados no modelo. Sendo os nomes dos atributos em inglês ou não." +
-                            $"Se algum valor presente no conteúdo não estiver de acordo com a estrutura, não adicione esse valor à resposta e retorne 'null' em seu lugar. " +
-                            $"Além disso, não inclua comentários ou explicações na sua resposta; forneça apenas o JSON diretamente."
+                            Text = 
+                                $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {objJson}. " +
+                                $"Esse JSON deve ser preenchido com os seguintes valores: {contentJson}. " +
+                                $"Se houver informações relacionadas a faculdades, especifique o tipo da faculdade, seja EAD ou presencial, conforme aplicável. " +
+                                $"O JSON retornado será utilizado em uma operação de deserialização, portanto, assegure-se de que ele está formatado corretamente para ser transformado em um objeto. " +
+                                $"A estrutura e os dados devem estar em conformidade com os requisitos especificados no modelo. Sendo os nomes dos atributos em inglês ou não. " +
+                                $"Se algum valor presente no conteúdo não estiver de acordo com a estrutura, não adicione esse valor à resposta e retorne 'null' em seu lugar. " +
+                                $"Além disso, não inclua comentários ou explicações na sua resposta; forneça apenas o JSON diretamente."
                         }
                     }
                 }
