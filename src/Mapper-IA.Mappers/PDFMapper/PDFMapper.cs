@@ -6,13 +6,13 @@ namespace MappersIA.PDFMapper;
 
 public class PDFMapper : IPDFMapper
 {
-    private readonly IConverterIA _iaConverter;
+    private readonly IConverterIA _converterIa;
     private readonly IPDFExtractor _pdfExtractor;
     private const int MAX_CONTENT_LENGTH = 10000;
 
-    public PDFMapper(IConverterIA iaConverter, IPDFExtractor pdfExtractor)
+    public PDFMapper(IConverterIA converterIa, IPDFExtractor pdfExtractor)
     {
-        _iaConverter = iaConverter;
+        _converterIa = converterIa;
         _pdfExtractor = pdfExtractor;
     }
 
@@ -24,7 +24,7 @@ public class PDFMapper : IPDFMapper
         {
             content = content.Substring(0, MAX_CONTENT_LENGTH);
         }
-        T result = await _iaConverter.SendPrompt<T>(content);
+        T result = await _converterIa.SendPrompt<T>(content);
         return result;
     }
 }

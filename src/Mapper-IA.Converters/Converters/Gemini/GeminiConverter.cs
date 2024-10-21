@@ -10,14 +10,14 @@ using Mapper_IA.EntitiesSetup;
 
 public class GeminiConverter : BaseConverters, IConverterIA
 {
-    public GeminiConverter(IAOptions iaOptions) : base(iaOptions)
+    public GeminiConverter(OptionsIA optionsIa) : base(optionsIa)
     {
     }
     public async Task<T> SendPrompt<T>(string content) where T : class, new()
     {
         T? obj = new T();
         EntityInitializer.Initialize(obj);
-        var contentJson = JsonSerializer.Serialize(content, this.Options.jsonSerializerOptions);
+        var contentJson = GetContentJson(content);
         var objJson = JsonSerializer.Serialize(obj, this.Options.jsonSerializerOptions);
         var promptRequest = this.CreatePromptRequest(objJson, contentJson);
         var promptRequestJson = JsonSerializer.Serialize(promptRequest);
@@ -45,6 +45,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
+
     private GeminiPromptRequest CreatePromptRequest(string objJson, string contentJson)
     {
         return new GeminiPromptRequest()
@@ -57,13 +58,14 @@ public class GeminiConverter : BaseConverters, IConverterIA
                     {
                         new Parts()
                         {
-                            Text =
-                            $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {objJson}. " +
-                            $"Esse JSON deve ser preenchido com os seguintes valores: {contentJson}. " +
-                            $"O JSON retornado será utilizado em uma operação de deserialização, portanto, assegure-se de que ele está formatado corretamente para ser transformado em um objeto. " +
-                            $"A estrutura e os dados devem estar em conformidade com os requisitos especificados no modelo. " +
-                            $"Se algum valor presente no conteúdo não estiver de acordo com a estrutura, não adicione esse valor à resposta e retorne 'null' em seu lugar. " +
-                            $"Além disso, não inclua comentários ou explicações na sua resposta; forneça apenas o JSON diretamente."
+                            Text = 
+                                $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {objJson}. " +
+                                $"Esse JSON deve ser preenchido com os seguintes valores: {contentJson}. " +
+                                $"Se houver informações relacionadas a faculdades, especifique o tipo da faculdade, seja EAD ou presencial, conforme aplicável. " +
+                                $"O JSON retornado será utilizado em uma operação de deserialização, portanto, assegure-se de que ele está formatado corretamente para ser transformado em um objeto. " +
+                                $"A estrutura e os dados devem estar em conformidade com os requisitos especificados no modelo. Sendo os nomes dos atributos em inglês ou não. " +
+                                $"Se algum valor presente no conteúdo não estiver de acordo com a estrutura, não adicione esse valor à resposta e retorne 'null' em seu lugar. " +
+                                $"Além disso, não inclua comentários ou explicações na sua resposta; forneça apenas o JSON diretamente."
                         }
                     }
                 }
@@ -88,6 +90,19 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
 
         throw new IAResponseException("IA Response não possui texto.");
+    }
+    
+    private string GetContentJson(string jsonString)
+    {
+        try
+        {
+            JsonDocument.Parse(jsonString);
+            return jsonString; 
+        }
+        catch (JsonException)
+        {
+            return JsonSerializer.Serialize(jsonString, this.Options.jsonSerializerOptions);
+        }
     }
 
 }
