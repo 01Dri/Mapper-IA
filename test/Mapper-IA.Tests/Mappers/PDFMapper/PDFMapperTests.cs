@@ -1,8 +1,8 @@
-﻿using ConvertersIA.Converters.Configuration;
-using ConvertersIA.Interfaces;
-using Extractors;
-using MappersIA.PDFMapper.Interfaces;
- 
+﻿using MapperIA.Core.Configuration;
+using MapperIA.Core.Converters.Gemini;
+using MapperIA.Core.Extractors;
+using MapperIA.Core.Interfaces;
+
 namespace Mapper_IA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
@@ -16,7 +16,7 @@ public class PDFMapperTests
             Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
         };
         IConverterIA geminiConverter = new GeminiConverter(optionsIa);
-        _pdfMapper = new MappersIA.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
+        _pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
     }
 
 

@@ -1,8 +1,7 @@
-﻿
-using ConvertersIA.Converters.Configuration;
-using ConvertersIA.Interfaces;
-using Mapper_IA.Tests.Mappers.ClassMapper.ModelsTest;
-using MappersIA.PDFMapper.Interfaces;
+﻿using Mapper_IA.Tests.Mappers.ClassMapper.ModelsTest;
+using MapperIA.Core.Configuration;
+using MapperIA.Core.Converters.Gemini;
+using MapperIA.Core.Interfaces;
 
 namespace Mapper_IA.Tests.Mappers.ClassMapper;
 
@@ -17,7 +16,7 @@ public class ClassMapperTests
             Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
         };
         IConverterIA geminiConverter = new GeminiConverter(optionsIa);
-        _classMapper = new global::Mappers.ClassMapper.ClassMapper(geminiConverter);
+        _classMapper = new MapperIA.Core.Mappers.ClassMapper.ClassMapper(geminiConverter);
     }
 
     [Fact]
