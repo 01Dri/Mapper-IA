@@ -7,15 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{65A17644-D71
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{32917505-4903-4B18-AF49-0BD91F45FD37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper-IA.Converters", "src\Mapper-IA.Converters\Mapper-IA.Converters.csproj", "{703D435C-3535-4A5E-99AB-CCFF970562C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapperIA.Tests", "test\MapperIA.Tests\MapperIA.Tests.csproj", "{513C166B-34EC-4815-B307-FFEF3991DC8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper-IA.Mappers", "src\Mapper-IA.Mappers\Mapper-IA.Mappers.csproj", "{D1FC968E-401A-4558-BED5-13E962500C3F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper-IA.Extractors", "src\Mapper-IA.Extractors\Mapper-IA.Extractors.csproj", "{BAFFD888-DA70-4BD8-987C-BC08D9766388}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper-IA.Tests", "test\Mapper-IA.Tests\Mapper-IA.Tests.csproj", "{513C166B-34EC-4815-B307-FFEF3991DC8C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapper-IA.EntitiesSetup", "src\Mapper-IA.EntitiesSetup\Mapper-IA.EntitiesSetup.csproj", "{75D9AF40-7EAC-47D9-BA50-FC02D527E5D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperIA.Core", "src\MapperIA.Core\MapperIA.Core.csproj", "{2665B664-7103-4CB3-8FB1-862DA4F6C16C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,36 +17,21 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{703D435C-3535-4A5E-99AB-CCFF970562C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{703D435C-3535-4A5E-99AB-CCFF970562C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{703D435C-3535-4A5E-99AB-CCFF970562C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{703D435C-3535-4A5E-99AB-CCFF970562C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D1FC968E-401A-4558-BED5-13E962500C3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D1FC968E-401A-4558-BED5-13E962500C3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D1FC968E-401A-4558-BED5-13E962500C3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D1FC968E-401A-4558-BED5-13E962500C3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BAFFD888-DA70-4BD8-987C-BC08D9766388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BAFFD888-DA70-4BD8-987C-BC08D9766388}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BAFFD888-DA70-4BD8-987C-BC08D9766388}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BAFFD888-DA70-4BD8-987C-BC08D9766388}.Release|Any CPU.Build.0 = Release|Any CPU
 		{513C166B-34EC-4815-B307-FFEF3991DC8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{513C166B-34EC-4815-B307-FFEF3991DC8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513C166B-34EC-4815-B307-FFEF3991DC8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{513C166B-34EC-4815-B307-FFEF3991DC8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75D9AF40-7EAC-47D9-BA50-FC02D527E5D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75D9AF40-7EAC-47D9-BA50-FC02D527E5D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75D9AF40-7EAC-47D9-BA50-FC02D527E5D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75D9AF40-7EAC-47D9-BA50-FC02D527E5D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2665B664-7103-4CB3-8FB1-862DA4F6C16C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2665B664-7103-4CB3-8FB1-862DA4F6C16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2665B664-7103-4CB3-8FB1-862DA4F6C16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2665B664-7103-4CB3-8FB1-862DA4F6C16C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{703D435C-3535-4A5E-99AB-CCFF970562C7} = {65A17644-D71A-493F-B44D-0E7C1A553F80}
-		{D1FC968E-401A-4558-BED5-13E962500C3F} = {65A17644-D71A-493F-B44D-0E7C1A553F80}
-		{BAFFD888-DA70-4BD8-987C-BC08D9766388} = {65A17644-D71A-493F-B44D-0E7C1A553F80}
 		{513C166B-34EC-4815-B307-FFEF3991DC8C} = {32917505-4903-4B18-AF49-0BD91F45FD37}
-		{75D9AF40-7EAC-47D9-BA50-FC02D527E5D1} = {65A17644-D71A-493F-B44D-0E7C1A553F80}
+		{2665B664-7103-4CB3-8FB1-862DA4F6C16C} = {65A17644-D71A-493F-B44D-0E7C1A553F80}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DB7C19EC-23DA-495A-827E-7BEE349E19C4}
