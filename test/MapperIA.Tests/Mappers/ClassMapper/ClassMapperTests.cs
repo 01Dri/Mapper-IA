@@ -11,10 +11,7 @@ public class ClassMapperTests
 
     public  ClassMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA()
-        {
-            Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
-        };
+        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"));
         IConverterIA geminiConverter = new GeminiConverter(optionsIa);
         _classMapper = new MapperIA.Core.Mappers.ClassMapper.ClassMapper(geminiConverter);
     }
@@ -47,6 +44,27 @@ public class ClassMapperTests
         Assert.Equal(user.Enderecos.Count, userDto.Address.Count);
         Assert.Equal(user.Departamentos.Count, userDto.Departments.Count);
 
+    }
+
+    [Fact]
+    public async Task Test_ClassMapper_User_To_UserDTO_With_Record()
+    {
+        var user = new User()
+        {
+            Nome = "Diego Henrique",
+            Idade = 30,
+            Email = "diego@example.com",
+            Telefone = "123456789",
+            Enderecos = this.GetAddress(),
+            DataNascimento = new DateTime(1994, 1, 1),
+            Ativo = true,
+            Salario = 5000.00m,
+            Cargo = "Desenvolvedor",
+            Departamentos = this.GetDepartments()
+        };
+        
+        UserDTORecord userDto = await _classMapper.Map<User, UserDTORecord>(user);
+        Assert.Equal("diego@example.com", userDto.email);
     }
 
     private List<Address> GetAddress()

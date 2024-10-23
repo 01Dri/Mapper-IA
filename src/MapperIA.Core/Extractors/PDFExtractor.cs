@@ -28,7 +28,8 @@ public class PDFExtractor : IPDFExtractor
 
     private string CleanText(string input)
     {
-        return string.Join(" ", input.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
+        return string.Join(" ", input.Split(new[] { '\n', '\r' },
+                StringSplitOptions.RemoveEmptyEntries))
             .Replace("\\n", " ")
             .Replace("\\r", " ")
             .Trim();

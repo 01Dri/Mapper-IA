@@ -11,10 +11,7 @@ public class PDFMapperTests
 
     public PDFMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA()
-        {
-            Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
-        };
+        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"));
         IConverterIA geminiConverter = new GeminiConverter(optionsIa);
         _pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
     }

@@ -12,9 +12,14 @@ public class ClassMapper : IClassMapper
         _converterIa = converterIa;
     }
 
-    public async Task<T> Map<TK, T>(TK origin) 
-        where TK : class, new() 
-        where T : class, new()
+    // public async Task<T> Map<TK, T>(TK origin) 
+    //     where TK : class, new() 
+    //     where T : class, new()
+    // {
+    //     T result = await _converterIa.SendPrompt<T>(JsonSerializer.Serialize(origin));
+    //     return result;
+    // }
+    public async Task<T> Map<TK, T>(TK origin) where TK : class, new() where T : class, new()
     {
         T result = await _converterIa.SendPrompt<T>(JsonSerializer.Serialize(origin));
         return result;

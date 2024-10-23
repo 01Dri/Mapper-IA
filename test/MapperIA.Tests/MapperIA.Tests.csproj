@@ -22,7 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Mapper-IA.Converters\Mapper-IA.Core.csproj" />
       <ProjectReference Include="..\..\src\MapperIA.Core\MapperIA.Core.csproj" />
     </ItemGroup>
 
