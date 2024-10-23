@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{65A17644-D71
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{32917505-4903-4B18-AF49-0BD91F45FD37}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mapper-IA.Tests", "test\Mapper-IA.Tests\Mapper-IA.Tests.csproj", "{513C166B-34EC-4815-B307-FFEF3991DC8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapperIA.Tests", "test\MapperIA.Tests\MapperIA.Tests.csproj", "{513C166B-34EC-4815-B307-FFEF3991DC8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapperIA.Core", "src\MapperIA.Core\MapperIA.Core.csproj", "{2665B664-7103-4CB3-8FB1-862DA4F6C16C}"
 EndProject
