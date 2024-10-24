@@ -1,4 +1,6 @@
-﻿using MapperIA.Core.Interfaces;
+﻿using System.Text.Json;
+using MapperIA.Core.Configuration;
+using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Core.Mappers.PDFMapper;
 
@@ -17,12 +19,16 @@ public class PDFMapper : IPDFMapper
 
     public async Task<T> Map<T>(string pdfPath) where T : class, new()
     {
-        string content = _pdfExtractor.ExtractContent(pdfPath);
-        if (content.Length > MAX_CONTENT_LENGTH)
+        T result = new T();
+        EntityInitializer.Initialize(result);
+        string pdfContent = _pdfExtractor.ExtractContent(pdfPath);
+        if (pdfContent.Length > MAX_CONTENT_LENGTH)
         {
-            content = content.Substring(0, MAX_CONTENT_LENGTH);
+            pdfContent = pdfContent.Substring(0, MAX_CONTENT_LENGTH);
         }
-        T result = await _converterIa.SendPrompt<T>(content);
+
+        string contentJson = JsonSerializer.Serialize(pdfContent);
+        result = await _converterIa.SendPrompt(contentJson, result);
         return result;
     }
 }

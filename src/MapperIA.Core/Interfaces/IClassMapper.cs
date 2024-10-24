@@ -3,8 +3,8 @@ namespace MapperIA.Core.Interfaces;
 
 public interface IClassMapper
 {
-    Task<T> Map<TK, T>(TK origin)
-        where T : class, new () 
+    Task<TK> Map<T, TK>(T origin)
+        where T : class
         where TK : class, new();
 
 }

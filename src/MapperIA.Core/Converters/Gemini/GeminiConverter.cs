@@ -3,6 +3,7 @@ using System.Text.Json;
 using MapperIA.Core.Configuration;
 using MapperIA.Core.Exceptions;
 using MapperIA.Core.Interfaces;
+using MapperIA.Core.Models;
 using MapperIA.Core.Models.Gemini.Request;
 using MapperIA.Core.Models.Gemini.Response;
 
@@ -13,13 +14,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
     public GeminiConverter(OptionsIA optionsIa) : base(optionsIa)
     {
     }
-    public async Task<T> SendPrompt<T>(string content) where T : class, new()
+    public async Task<T> SendPrompt<T>(string content, T? objDestiny) where T : class
     {
-        T? obj = new T();
-        EntityInitializer.Initialize(obj);
-        var contentJson = GetContentJson(content);
-        var objJson = JsonSerializer.Serialize(obj, this.Options.jsonSerializerOptions);
-        var promptRequest = this.CreatePromptRequest(objJson, contentJson);
+        var objJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
+        var baseModelJson = EntityInitializer.InitializeBaseModel(objDestiny, objJson);
+        var promptRequest = this.CreatePromptRequest(baseModelJson, content);
         var promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -27,15 +26,15 @@ public class GeminiConverter : BaseConverters, IConverterIA
         {
             var response = await this.HttpClient.PostAsync(
                 $"https://generativelanguage.googleapis.com/v1beta" +
-                $"/models/gemini-1.5-flash-latest:generateContent?key={this.Options.Key}",
+                $"/models/{this.Options.Model}:generateContent?key={this.Options.Key}",
                 mediaTypeRequest);
             
             if (response.IsSuccessStatusCode)
             {
                 var responseData = await response.Content.ReadAsStringAsync();
-                var responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.jsonSerializerOptions);
-                obj = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.jsonSerializerOptions);
-                return obj ?? throw new ConverterException("Não foi possível converter.");
+                var responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
+                objDestiny = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
+                return objDestiny ?? throw new ConverterException("Não foi possível converter.");
             }
             throw new IARequestStatusException($"Ocorreu uma falha na requisição: {response.StatusCode}");
         }
@@ -46,7 +45,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     }
 
 
-    private GeminiPromptRequest CreatePromptRequest(string objJson, string contentJson)
+    private GeminiPromptRequest CreatePromptRequest(BaseModelJson baseModelJson, string content)
     {
         return new GeminiPromptRequest()
         {
@@ -59,13 +58,14 @@ public class GeminiConverter : BaseConverters, IConverterIA
                         new Parts()
                         {
                             Text = 
-                                $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {objJson}. " +
-                                $"Esse JSON deve ser preenchido com os seguintes valores: {contentJson}. " +
-                                $"Se houver informações relacionadas a faculdades, especifique o tipo da faculdade, seja EAD ou presencial, conforme aplicável. " +
-                                $"O JSON retornado será utilizado em uma operação de deserialização, portanto, assegure-se de que ele está formatado corretamente para ser transformado em um objeto. " +
-                                $"A estrutura e os dados devem estar em conformidade com os requisitos especificados no modelo. Sendo os nomes dos atributos em inglês ou não. " +
-                                $"Se algum valor presente no conteúdo não estiver de acordo com a estrutura, não adicione esse valor à resposta e retorne 'null' em seu lugar. " +
-                                $"Além disso, não inclua comentários ou explicações na sua resposta; forneça apenas o JSON diretamente."
+                                $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {baseModelJson.BaseJson}. " +
+                                $"Esse JSON deve ser preenchido com os seguintes valores: {content}. \n" +
+                                $"Caso necessite saber, quais são os atributos necessários para preencher o JSON, você pode verificar aqui: {JsonSerializer.Serialize(baseModelJson.Types)}. " +
+                                $"Se houver informações relacionadas a faculdades, especifique o tipo da faculdade (EAD ou presencial), conforme aplicável. " +
+                                $"O JSON retornado será utilizado para deserialização, portanto, assegure-se de que ele esteja formatado corretamente para ser transformado em um objeto. " +
+                                $"A estrutura e os dados devem seguir o modelo. " +
+                                $"Se algum valor no conteúdo não corresponder à estrutura, não adicione esse valor e retorne 'null' em seu lugar. " +
+                                $"Além disso, forneça apenas o JSON diretamente, sem incluir comentários ou explicações."
                         }
                     }
                 }
@@ -90,19 +90,6 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
 
         throw new IAResponseException("IA Response não possui texto.");
-    }
-    
-    private string GetContentJson(string jsonString)
-    {
-        try
-        {
-            JsonDocument.Parse(jsonString);
-            return jsonString; 
-        }
-        catch (JsonException)
-        {
-            return JsonSerializer.Serialize(jsonString, this.Options.jsonSerializerOptions);
-        }
     }
 
 }
