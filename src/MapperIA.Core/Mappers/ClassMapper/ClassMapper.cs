@@ -4,7 +4,7 @@ using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Core.Mappers.ClassMapper;
 
-public class ClassMapper : IClassMapper
+public class ClassMapper : IMapper
 {
     private readonly IConverterIA _converterIa;
 
@@ -19,6 +19,9 @@ public class ClassMapper : IClassMapper
         TK result = new TK();
         EntityUtils.InitializeDependencyProperties(result);
         string originJson = JsonSerializer.Serialize(origin);
+        if (string.IsNullOrEmpty(originJson)) 
+            throw new ArgumentException("The serialization of the origin resulted in invalid content.",
+                nameof(origin));
         await _converterIa.SendPrompt(originJson, result);
         return result;
     }

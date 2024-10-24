@@ -7,7 +7,7 @@ namespace Mapper_IA.Tests.Mappers.ClassMapper;
 
 public class ClassMapperTests
 {
-    private readonly IClassMapper _classMapper;
+    private readonly IMapper _classMapper;
 
     public  ClassMapperTests()
     {

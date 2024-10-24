@@ -7,15 +7,34 @@ namespace Mapper_IA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
 {
-    
-    
+    private readonly OptionsIA _optionsIa;
+    private readonly IConverterIA _converterIa;
+    public PDFMapperTests()
+    {
+        _optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"),
+            "gemini-1.5-flash");
+        _converterIa = new GeminiConverter(_optionsIa);
+    }
+
+    [Fact]
+    public async Task Test_Should_Throw_FileNotFoundException_When_PdfFile_Does_Not_Exist()
+    {
+        IMapperPDF pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(_converterIa, new PDFExtractor());
+
+        string pdfPath = Path.Combine("path/to/nonexistent/file.pdf");
+
+        var exception = await Assert.ThrowsAsync<FileNotFoundException>(
+            async () => await pdfMapper.Map<CurriculumModel>(pdfPath)
+        );
+
+        Assert.Equal("The specified PDF file does not exist.", exception.Message);
+        Assert.Equal(pdfPath, exception.FileName);
+    }
 
     [Fact]
     public async Task Test_PDF_Converter_Should_Map_PDF_To_Model_GeminiConverter_FlashModel()
     {
-        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"), "gemini-1.5-flash");
-        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
-        IPDFMapper pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
+        IMapperPDF pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(_converterIa, new PDFExtractor());
 
         var pdfPath = Path.Combine(@"../../../Mappers/PDFMapper/PDFs/Curriculo - Diego.pdf");
         CurriculumModel curriculumModel =  await pdfMapper.Map<CurriculumModel>(pdfPath);
@@ -34,10 +53,7 @@ public class PDFMapperTests
     [Fact]
     public async Task Test_PDF_Converter_Should_Map_PDF_To_Model_GeminiConverter_ProModel()
     {
-        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"), "gemini-1.5-pro");
-        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
-        IPDFMapper pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
-
+        IMapperPDF pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(_converterIa, new PDFExtractor());
         var pdfPath = Path.Combine(@"../../../Mappers/PDFMapper/PDFs/Curriculo - Diego.pdf");
         CurriculumModel curriculumModel =  await pdfMapper.Map<CurriculumModel>(pdfPath);
         Assert.Contains("Uninter", curriculumModel.Faculdade);

@@ -14,10 +14,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
     public GeminiConverter(OptionsIA optionsIa) : base(optionsIa)
     {
     }
+
     public async Task<T> SendPrompt<T>(string content, T? objDestiny) where T : class
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
-        BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson); //
+        BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
         GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
@@ -35,16 +36,15 @@ public class GeminiConverter : BaseConverters, IConverterIA
                 GeminiPromptResponse responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
                 T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
                 EntityUtils.CopyEntityProperties(objSource, objDestiny);
-                return objDestiny ?? throw new ConverterException("Não foi possível converter.");
+                return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
             }
-            throw new IARequestStatusException($"Ocorreu uma falha na requisição: {response.StatusCode}");
+            throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
         }
         catch (Exception ex)
         {
-            throw new ConverterException("Ocorreu uma falha, causa: " + ex.Message);
+            throw new ConverterIAException($"An error occurred during processing: {ex.Message}");
         }
     }
-
 
     private GeminiPromptRequest CreatePromptRequest(BaseModelJson baseModelJson, string content)
     {
@@ -59,14 +59,14 @@ public class GeminiConverter : BaseConverters, IConverterIA
                         new Parts()
                         {
                             Text = 
-                                $"Por favor, retorne um JSON que siga rigorosamente a estrutura a seguir: {baseModelJson.BaseJson}. " +
-                                $"Esse JSON deve ser preenchido com os seguintes valores: {content}. \n" +
-                                $"Caso necessite saber, quais são os atributos necessários para preencher o JSON, você pode verificar aqui: {JsonSerializer.Serialize(baseModelJson.Types)}. " +
-                                $"Se houver informações relacionadas a faculdades, especifique o tipo da faculdade (EAD ou presencial), conforme aplicável. " +
-                                $"O JSON retornado será utilizado para deserialização, portanto, assegure-se de que ele esteja formatado corretamente para ser transformado em um objeto. " +
-                                $"A estrutura e os dados devem seguir o modelo. " +
-                                $"Se algum valor no conteúdo não corresponder à estrutura, não adicione esse valor e retorne 'null' em seu lugar. " +
-                                $"Além disso, forneça apenas o JSON diretamente, sem incluir comentários ou explicações."
+                                $"Please return a JSON that strictly follows the structure: {baseModelJson.BaseJson}. " +
+                                $"This JSON should be filled with the following values: {content}. \n" +
+                                $"If you need to know which attributes are required to fill the JSON, you can check here: {JsonSerializer.Serialize(baseModelJson.Types)}. " +
+                                $"If there are any college-related information, please specify the type of college (EAD or in-person), as applicable. " +
+                                $"The returned JSON will be used for deserialization, so ensure it is properly formatted for conversion into an object. " +
+                                $"The structure and data must adhere to the model. " +
+                                $"If any value in the content does not match the structure, do not include that value and return 'null' instead. " +
+                                $"Additionally, provide only the JSON directly, without any comments or explanations."
                         }
                     }
                 }
@@ -74,13 +74,15 @@ public class GeminiConverter : BaseConverters, IConverterIA
         };
     }
 
-
     private string ParseJsonResponseIA(GeminiPromptResponse? response)
     {
-        if (response == null) throw new IAResponseException("IA Response é nulo.");
+        if (response == null) 
+            throw new ResponseIAException("The IA response is null.");
+
         var candidate = response.Candidates.FirstOrDefault();
         var part = candidate?.Content.Parts.FirstOrDefault();
         var text = part?.Text;
+        
         if (!string.IsNullOrEmpty(text))
         {
             var cleanedJson = text
@@ -91,7 +93,6 @@ public class GeminiConverter : BaseConverters, IConverterIA
             return cleanedJson;
         }
 
-        throw new IAResponseException("IA Response não possui texto.");
+        throw new ResponseIAException("The IA response does not contain any text.");
     }
-
 }

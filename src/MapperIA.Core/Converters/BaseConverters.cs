@@ -14,14 +14,13 @@ public abstract class BaseConverters
     {
         Options = optionsIa;
         
-        if (string.IsNullOrEmpty(Options.Key)) throw new IAKeyException("API KEY Inválida!");
+        if (string.IsNullOrEmpty(Options.Key)) throw new ApiKeyException("Invalid API Key!");
         if (optionsIa.JsonSerializerOptions == null)
         {
             optionsIa.JsonSerializerOptions = new JsonSerializerOptions()
             {
-                DefaultIgnoreCondition = JsonIgnoreCondition.Never, //Nunca vai ignorar qualquer propriedade não prsente no objeto
-                //(Retornando null se necessário)
-                WriteIndented = true // Identação do JSON
+                DefaultIgnoreCondition = JsonIgnoreCondition.Never, 
+                WriteIndented = true
             };
         }
 
