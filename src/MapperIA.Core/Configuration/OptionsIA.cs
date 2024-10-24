@@ -5,7 +5,9 @@ namespace MapperIA.Core.Configuration;
 public class OptionsIA
 {
     public string? Key { get; set; }
-    public JsonSerializerOptions? jsonSerializerOptions { get; set; }
+    public JsonSerializerOptions? JsonSerializerOptions { get; set; }
+    public string Model { get; set; }
+    
 
     public OptionsIA()
     {
@@ -16,9 +18,16 @@ public class OptionsIA
         Key = key;
     }
 
-    public OptionsIA(string? key, JsonSerializerOptions? jsonSerializerOptions)
+    public OptionsIA(string? key, string model)
     {
         Key = key;
-        this.jsonSerializerOptions = jsonSerializerOptions;
+        Model = model;
+    }
+
+    public OptionsIA(string? key, JsonSerializerOptions? jsonSerializerOptions, string model)
+    {
+        Key = key;
+        JsonSerializerOptions = jsonSerializerOptions;
+        Model = model;
     }
 }

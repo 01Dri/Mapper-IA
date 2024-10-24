@@ -14,16 +14,17 @@ public abstract class BaseConverters
     {
         Options = optionsIa;
         
-        if (string.IsNullOrEmpty(Options.Key)) throw new IAKeyException("API KEY Inválida!");
-        if (optionsIa.jsonSerializerOptions == null)
+        if (string.IsNullOrEmpty(Options.Key)) throw new ApiKeyException("Invalid API Key!");
+        if (optionsIa.JsonSerializerOptions == null)
         {
-            optionsIa.jsonSerializerOptions = new JsonSerializerOptions()
+            optionsIa.JsonSerializerOptions = new JsonSerializerOptions()
             {
-                DefaultIgnoreCondition = JsonIgnoreCondition.Never, //Nunca vai ignorar qualquer propriedade não prsente no objeto
-                //(Retornando null se necessário)
-                WriteIndented = true // Identação do JSON
+                DefaultIgnoreCondition = JsonIgnoreCondition.Never, 
+                WriteIndented = true
             };
         }
+
+        if (string.IsNullOrEmpty(optionsIa.Model)) optionsIa.Model = "gemini-1.5-flash-latest";
         HttpClient = new HttpClient();
     }
 }
