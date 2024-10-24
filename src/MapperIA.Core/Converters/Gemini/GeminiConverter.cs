@@ -15,7 +15,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
     }
 
-    public async Task<T> SendPrompt<T>(string content, T? objDestiny) where T : class
+    public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
@@ -33,10 +33,15 @@ public class GeminiConverter : BaseConverters, IConverterIA
             if (response.IsSuccessStatusCode)
             {
                 string responseData = await response.Content.ReadAsStringAsync();
-                GeminiPromptResponse responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
-                T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
-                EntityUtils.CopyEntityProperties(objSource, objDestiny);
-                return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
+                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
+                if (responseObject != null)
+                {
+                    T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
+                    EntityUtils.CopyEntityProperties(objSource, objDestiny);
+                    return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
+                }
+
+                throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
             }
             throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
         }
