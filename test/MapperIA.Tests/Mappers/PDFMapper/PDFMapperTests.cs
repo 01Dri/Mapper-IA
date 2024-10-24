@@ -7,25 +7,56 @@ namespace Mapper_IA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
 {
-    private readonly IPDFMapper _pdfMapper;
-
+    private readonly OptionsIA _optionsIa;
+    private readonly IConverterIA _converterIa;
     public PDFMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA()
-        {
-            Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
-        };
-        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
-        _pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(geminiConverter, new PDFExtractor());
+        _optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"),
+            "gemini-1.5-flash");
+        _converterIa = new GeminiConverter(_optionsIa);
     }
 
+    [Fact]
+    public async Task Test_Should_Throw_FileNotFoundException_When_PdfFile_Does_Not_Exist()
+    {
+        IMapperPDF pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(_converterIa, new PDFExtractor());
+
+        string pdfPath = Path.Combine("path/to/nonexistent/file.pdf");
+
+        var exception = await Assert.ThrowsAsync<FileNotFoundException>(
+            async () => await pdfMapper.Map<CurriculumModel>(pdfPath)
+        );
+
+        Assert.Equal("The specified PDF file does not exist.", exception.Message);
+        Assert.Equal(pdfPath, exception.FileName);
+    }
 
     [Fact]
-    public async Task Test_PDF_Converter_Should_Map_PDF_To_Model_GeminiConverter()
+    public async Task Test_PDF_Converter_Should_Map_PDF_To_Model_GeminiConverter_FlashModel()
     {
+        IMapperPDF pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(_converterIa, new PDFExtractor());
+
         var pdfPath = Path.Combine(@"../../../Mappers/PDFMapper/PDFs/Curriculo - Diego.pdf");
-        CurriculumModel curriculumModel =  await _pdfMapper.Map<CurriculumModel>(pdfPath);
+        CurriculumModel curriculumModel =  await pdfMapper.Map<CurriculumModel>(pdfPath);
         Assert.Equal("Uninter", curriculumModel.Faculdade);
+        Assert.Equal("Análise e desenvolvimento de sistemas", curriculumModel.Curso);
+        Assert.Equal(2, curriculumModel.Projects.Count);
+        Assert.Equal("diegomagalhaesdev@gmail.com", curriculumModel.Email);
+        
+        var expectedProjectNames = new List<string> { "ReclameTrancoso", "VTHoftalon" };
+        var actualProjectNames = curriculumModel.Projects.Select(p => p.Nome).ToList();
+
+        Assert.Equal(expectedProjectNames, actualProjectNames);
+
+    }
+    
+    [Fact]
+    public async Task Test_PDF_Converter_Should_Map_PDF_To_Model_GeminiConverter_ProModel()
+    {
+        IMapperPDF pdfMapper = new MapperIA.Core.Mappers.PDFMapper.PDFMapper(_converterIa, new PDFExtractor());
+        var pdfPath = Path.Combine(@"../../../Mappers/PDFMapper/PDFs/Curriculo - Diego.pdf");
+        CurriculumModel curriculumModel =  await pdfMapper.Map<CurriculumModel>(pdfPath);
+        Assert.Contains("Uninter", curriculumModel.Faculdade);
         Assert.Equal("Análise e desenvolvimento de sistemas", curriculumModel.Curso);
         Assert.Equal(2, curriculumModel.Projects.Count);
         Assert.Equal("diegomagalhaesdev@gmail.com", curriculumModel.Email);

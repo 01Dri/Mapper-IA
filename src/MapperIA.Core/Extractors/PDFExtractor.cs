@@ -5,10 +5,19 @@ using Newtonsoft.Json;
 
 namespace MapperIA.Core.Extractors;
 
-public class PDFExtractor : IPDFExtractor
+public class PDFExtractor : IExtractor
 {
     public string ExtractContent(string pdfPath)
     {
+        if (string.IsNullOrEmpty(pdfPath))
+        {
+            throw new ArgumentException("The PDF path cannot be null or empty.", nameof(pdfPath));
+        }
+
+        if (!File.Exists(pdfPath))
+        {
+            throw new FileNotFoundException("The specified PDF file does not exist.", pdfPath);
+        }
 
         var pdfReader = new PdfReader(pdfPath);
         var pdfDoc = new PdfDocument(pdfReader);
@@ -28,7 +37,8 @@ public class PDFExtractor : IPDFExtractor
 
     private string CleanText(string input)
     {
-        return string.Join(" ", input.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
+        return string.Join(" ", input.Split(new[] { '\n', '\r' },
+                StringSplitOptions.RemoveEmptyEntries))
             .Replace("\\n", " ")
             .Replace("\\r", " ")
             .Trim();

@@ -1,9 +1,10 @@
 ﻿
+
 namespace MapperIA.Core.Exceptions;
 
-public class ConverterException : Exception
+public class ApiKeyException : Exception
 {
-    public ConverterException(string msg)
+    public ApiKeyException(string msg)
         :base(msg)
     {
         

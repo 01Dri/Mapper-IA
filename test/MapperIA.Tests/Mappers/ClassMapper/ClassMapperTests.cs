@@ -7,14 +7,11 @@ namespace Mapper_IA.Tests.Mappers.ClassMapper;
 
 public class ClassMapperTests
 {
-    private readonly IClassMapper _classMapper;
+    private readonly IMapper _classMapper;
 
     public  ClassMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA()
-        {
-            Key = Environment.GetEnvironmentVariable("GEMINI_KEY")
-        };
+        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"));
         IConverterIA geminiConverter = new GeminiConverter(optionsIa);
         _classMapper = new MapperIA.Core.Mappers.ClassMapper.ClassMapper(geminiConverter);
     }
@@ -35,7 +32,6 @@ public class ClassMapperTests
             Cargo = "Desenvolvedor",
             Departamentos = this.GetDepartments()
         };
-        
         UserDTO userDto = await _classMapper.Map<User, UserDTO>(user);
         
         Assert.Equal("Diego Henrique", userDto.Nome);
@@ -48,6 +44,7 @@ public class ClassMapperTests
         Assert.Equal(user.Departamentos.Count, userDto.Departments.Count);
 
     }
+
 
     private List<Address> GetAddress()
     {
