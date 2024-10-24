@@ -16,24 +16,25 @@ public class GeminiConverter : BaseConverters, IConverterIA
     }
     public async Task<T> SendPrompt<T>(string content, T? objDestiny) where T : class
     {
-        var objJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
-        var baseModelJson = EntityInitializer.InitializeBaseModel(objDestiny, objJson);
-        var promptRequest = this.CreatePromptRequest(baseModelJson, content);
-        var promptRequestJson = JsonSerializer.Serialize(promptRequest);
+        string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
+        BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson); //
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content);
+        string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
         try
         {
-            var response = await this.HttpClient.PostAsync(
+            HttpResponseMessage response = await this.HttpClient.PostAsync(
                 $"https://generativelanguage.googleapis.com/v1beta" +
                 $"/models/{this.Options.Model}:generateContent?key={this.Options.Key}",
                 mediaTypeRequest);
             
             if (response.IsSuccessStatusCode)
             {
-                var responseData = await response.Content.ReadAsStringAsync();
-                var responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
-                objDestiny = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
+                string responseData = await response.Content.ReadAsStringAsync();
+                GeminiPromptResponse responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
+                T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
+                EntityUtils.CopyEntityProperties(objSource, objDestiny);
                 return objDestiny ?? throw new ConverterException("Não foi possível converter.");
             }
             throw new IARequestStatusException($"Ocorreu uma falha na requisição: {response.StatusCode}");
@@ -72,6 +73,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
             }
         };
     }
+
 
     private string ParseJsonResponseIA(GeminiPromptResponse? response)
     {

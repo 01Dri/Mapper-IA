@@ -4,10 +4,10 @@ using MapperIA.Core.Models;
 
 namespace MapperIA.Core.Configuration;
 
-public static class EntityInitializer
+public static class EntityUtils
 {
     
-    public static void Initialize<T>(T obj) where T : class
+    public static void InitializeDependencyProperties<T>(T obj) where T : class
     {
         var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -25,7 +25,7 @@ public static class EntityInitializer
         }
     }
 
-    public static BaseModelJson InitializeBaseModel<T>(T obj, string objJson) 
+    public static BaseModelJson InitializeBaseModel<T>(string objJson) 
     {
         Type type = typeof(T);
         PropertyInfo[] properties = type.GetProperties();
@@ -42,5 +42,16 @@ public static class EntityInitializer
 
         return baseModelJson;
     }
-    
+    public static void CopyEntityProperties<T>(T? source, T destination)
+    {
+        var properties = typeof(T).GetProperties();
+        foreach (var property in properties)
+        {
+            if (property.CanWrite)
+            {
+                var value = property.GetValue(source);
+                property.SetValue(destination, value);
+            }
+        }
+    }
 }

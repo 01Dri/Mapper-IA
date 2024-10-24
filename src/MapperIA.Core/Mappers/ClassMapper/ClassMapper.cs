@@ -17,9 +17,9 @@ public class ClassMapper : IClassMapper
     public async Task<TK> Map<T, TK>(T origin) where T : class where TK : class, new()
     {
         TK result = new TK();
-        EntityInitializer.Initialize(result);
+        EntityUtils.InitializeDependencyProperties(result);
         string originJson = JsonSerializer.Serialize(origin);
-        result = await _converterIa.SendPrompt(originJson, result);
+        await _converterIa.SendPrompt(originJson, result);
         return result;
     }
 

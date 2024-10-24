@@ -20,7 +20,7 @@ public class PDFMapper : IPDFMapper
     public async Task<T> Map<T>(string pdfPath) where T : class, new()
     {
         T result = new T();
-        EntityInitializer.Initialize(result);
+        EntityUtils.InitializeDependencyProperties(result);
         string pdfContent = _pdfExtractor.ExtractContent(pdfPath);
         if (pdfContent.Length > MAX_CONTENT_LENGTH)
         {
@@ -28,7 +28,7 @@ public class PDFMapper : IPDFMapper
         }
 
         string contentJson = JsonSerializer.Serialize(pdfContent);
-        result = await _converterIa.SendPrompt(contentJson, result);
+        await _converterIa.SendPrompt(contentJson, result);
         return result;
     }
 }

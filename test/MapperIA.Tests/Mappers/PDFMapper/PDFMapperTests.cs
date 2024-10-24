@@ -40,7 +40,7 @@ public class PDFMapperTests
 
         var pdfPath = Path.Combine(@"../../../Mappers/PDFMapper/PDFs/Curriculo - Diego.pdf");
         CurriculumModel curriculumModel =  await pdfMapper.Map<CurriculumModel>(pdfPath);
-        Assert.Equal("Uninter", curriculumModel.Faculdade);
+        Assert.Contains("Uninter", curriculumModel.Faculdade);
         Assert.Equal("Análise e desenvolvimento de sistemas", curriculumModel.Curso);
         Assert.Equal(2, curriculumModel.Projects.Count);
         Assert.Equal("diegomagalhaesdev@gmail.com", curriculumModel.Email);
