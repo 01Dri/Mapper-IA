@@ -8,13 +8,13 @@ public class Pessoa
         this.nome = nome;
         this.idade = idade;
     }
-    public string GetNome()
+    public string Nome
     {
-        return nome;
+        get { return nome; }
     }
-    public int GetIdade()
+    public int Idade
     {
-        return idade;
+        get { return idade; }
     }
     public bool IsMaiorDeIdade()
     {

@@ -17,11 +17,13 @@ public class FileClassMapperTests
         _fileClassMapper = new MapperIA.Core.Mappers.ClassMapper.FileClassMapper(fileClassExtractor, geminiConverter);
     }
 
+    
+    // ACHAR UMA FORMA DE CRIAR O NAMESPACE NA CLASSE
     [Fact]
     public async Task Test()
     {
-        await _fileClassMapper.Map("Test.java", "Teste");
-        await _fileClassMapper.Map("Carro.java", "Teste");
+        await _fileClassMapper.Map("Test.java", "MappedClasses");
+        await _fileClassMapper.Map("Carro.java", "MappedClasses");
 
     }
 

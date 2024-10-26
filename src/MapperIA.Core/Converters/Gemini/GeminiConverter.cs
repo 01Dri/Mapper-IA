@@ -15,11 +15,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
     }
 
-    public async Task<T> SendPrompt<T>(string content, T objDestiny, bool isFileClassMapper) where T : class
+    public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, isFileClassMapper);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -53,7 +53,8 @@ public class GeminiConverter : BaseConverters, IConverterIA
 
     public async Task<string> SendPrompt(string content)
     {
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest(null, content, true);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest
+            (null, content, true);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
 
@@ -70,7 +71,10 @@ public class GeminiConverter : BaseConverters, IConverterIA
                 GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
                 if (responseObject != null)
                 {
-                    return responseObject.Candidates.FirstOrDefault().Content.Parts.FirstOrDefault().Text ?? throw new ConverterIAException("Unable to convert the destination object.");
+                    return responseObject
+                        .Candidates.FirstOrDefault()
+                        ?.Content.Parts.FirstOrDefault()
+                        ?.Text ?? throw new ConverterIAException("Unable to convert the destination object.");
                 }
             }
             throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");

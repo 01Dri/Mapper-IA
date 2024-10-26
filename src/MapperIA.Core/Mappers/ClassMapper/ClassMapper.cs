@@ -22,7 +22,7 @@ public class ClassMapper : IMapper
         if (string.IsNullOrEmpty(originJson)) 
             throw new ArgumentException("The serialization of the origin resulted in invalid content.",
                 nameof(origin));
-        await _converterIa.SendPrompt(originJson, result, false);
+        await _converterIa.SendPrompt(originJson, result);
         return result;
     }
 
