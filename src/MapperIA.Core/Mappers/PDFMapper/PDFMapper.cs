@@ -32,7 +32,7 @@ public class PDFMapper : IMapperPDF
         }
 
         string contentJson = JsonSerializer.Serialize(pdfContent);
-        await _converterIa.SendPrompt(contentJson, result);
+        await _converterIa.SendPrompt(contentJson, result, false);
         return result;
     }
 }

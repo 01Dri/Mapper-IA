@@ -15,11 +15,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
     }
 
-    public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
+    public async Task<T> SendPrompt<T>(string content, T objDestiny, bool isFileClassMapper) where T : class
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, isFileClassMapper);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -51,7 +51,38 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    private GeminiPromptRequest CreatePromptRequest(BaseModelJson baseModelJson, string content)
+    public async Task<string> SendPrompt(string content)
+    {
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(null, content, true);
+        string promptRequestJson = JsonSerializer.Serialize(promptRequest);
+        var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
+
+        try
+        {
+            HttpResponseMessage response = await this.HttpClient.PostAsync(
+                $"https://generativelanguage.googleapis.com/v1beta" +
+                $"/models/{this.Options.Model}:generateContent?key={this.Options.Key}",
+                mediaTypeRequest);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseData = await response.Content.ReadAsStringAsync();
+                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
+                if (responseObject != null)
+                {
+                    return responseObject.Candidates.FirstOrDefault().Content.Parts.FirstOrDefault().Text ?? throw new ConverterIAException("Unable to convert the destination object.");
+                }
+            }
+            throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
+
+        }
+        catch (Exception ex)
+        {
+            throw new ConverterIAException($"An error occurred during processing: {ex.Message}");
+        }
+    }
+
+    private GeminiPromptRequest CreatePromptRequest(BaseModelJson? baseModelJson, string content, bool isFileClassMapper)
     {
         return new GeminiPromptRequest()
         {
@@ -63,15 +94,9 @@ public class GeminiConverter : BaseConverters, IConverterIA
                     {
                         new Parts()
                         {
-                            Text = 
-                                $"Please return a JSON that strictly follows the structure: {baseModelJson.BaseJson}. " +
-                                $"This JSON should be filled with the following values: {content}. \n" +
-                                $"If you need to know which attributes are required to fill the JSON, you can check here: {JsonSerializer.Serialize(baseModelJson.Types)}. " +
-                                $"If there are any college-related information, please specify the type of college (EAD or in-person), as applicable. " +
-                                $"The returned JSON will be used for deserialization, so ensure it is properly formatted for conversion into an object. " +
-                                $"The structure and data must adhere to the model. " +
-                                $"If any value in the content does not match the structure, do not include that value and return 'null' instead. " +
-                                $"Additionally, provide only the JSON directly, without any comments or explanations."
+                            Text = !isFileClassMapper 
+                                ? DefaultMapperPrompt(baseModelJson, content)
+                                : FileClassConverterPrompt(content)
                         }
                     }
                 }
@@ -100,4 +125,30 @@ public class GeminiConverter : BaseConverters, IConverterIA
 
         throw new ResponseIAException("The IA response does not contain any text.");
     }
+
+    private string DefaultMapperPrompt(BaseModelJson baseModelJson, string content)
+    {
+        return $"Please return a JSON that strictly follows the structure: {baseModelJson.BaseJson}. " +
+               $"This JSON should be filled with the following values: {content}. \n" +
+               $"If you need to know which attributes are required to fill the JSON, you can check here: {JsonSerializer.Serialize(baseModelJson.Types)}. " +
+               $"If there are any college-related information, please specify the type of college (EAD or in-person), as applicable. " +
+               $"The returned JSON will be used for deserialization, so ensure it is properly formatted for conversion into an object. " +
+               $"The structure and data must adhere to the model. " +
+               $"If any value in the content does not match the structure, do not include that value and return 'null' instead. " +
+               $"Additionally, provide only the JSON directly, without any comments or explanations.";
+    }
+
+    private string FileClassConverterPrompt(string content)
+    {
+        return
+            $"Please convert the following Java class into a C# class. " +
+            $"The Java class is as follows: {content}. \n" +
+            $"Please ensure the conversion follows these rules: \n" +
+            $"1. Use C# conventions for naming (PascalCase for classes and properties). \n" +
+            $"2. Replace Java types with equivalent C# types (e.g., int -> int, String -> string). \n" +
+            $"3. Ensure that methods and constructors are converted appropriately. \n" +
+            $"4. Include any necessary using directives at the top of the C# file. \n" +
+            $"5. The returned C# class should be properly formatted and ready for compilation. \n" +
+            $"6. Do not include any comments or explanations; just return the C# class code. \n";
+    } 
 }
