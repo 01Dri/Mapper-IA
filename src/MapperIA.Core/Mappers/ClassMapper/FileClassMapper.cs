@@ -7,6 +7,7 @@ public class FileClassMapper : IFileClassMapper
 {
     private readonly IExtractor _extractor;
     private readonly IConverterIA _converterIa;
+    
     public FileClassMapper(IExtractor extractor, IConverterIA converterIa)
     {
         _extractor = extractor;
@@ -14,17 +15,21 @@ public class FileClassMapper : IFileClassMapper
     }
 
     public async Task<string> Map(
+        
         string classFileName,
         string outputFolder,
         string? newClassNameResult = null)
     {
 
         string defaultSolutionPath = this.GetSolutionDefaultPath();
-        string classFileContentJson = this.GetClassFileContentJson(classFileName);
-        string resultContentByPrompt = await _converterIa.SendPrompt(classFileContentJson);
+        string classFileContentJson = this.GetClassFileContent(classFileName);
+        string outputFolderPath = Path.Combine(defaultSolutionPath, outputFolder);
+        
+        string resultContentByPrompt = await _converterIa.SendPrompt(
+            classFileContentJson, this.GetNamespaceValue(outputFolder));
+        
         resultContentByPrompt = this.CleanResultContent(resultContentByPrompt);
 
-        string outputFolderPath = Path.Combine(defaultSolutionPath, outputFolder);
         string fullOutputFolder =
             Path.Combine(outputFolderPath,
                 $"{this.GetClassFileNameResult
@@ -58,11 +63,9 @@ public class FileClassMapper : IFileClassMapper
         return newClassNameResult;
     }
 
-    private string GetClassFileContentJson(string classFileName)
+    private string GetClassFileContent(string classFileName)
     {
-        string defaultSolutionPath = AppDomain.CurrentDomain.BaseDirectory;
-        string defaultPath = Directory.GetParent(defaultSolutionPath).Parent.Parent.Parent.FullName;
-        string fullPath = Path.Combine(defaultPath, "Class", classFileName);
+        string fullPath = Path.Combine(this.GetSolutionDefaultPath(), "Class", classFileName);
         return  _extractor.ExtractContent(fullPath);
     }
 
@@ -82,4 +85,15 @@ public class FileClassMapper : IFileClassMapper
             .Replace("\n", Environment.NewLine)
             .Trim();
     }
+    private  string GetSolutionName()
+    {
+        string solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
+        return new DirectoryInfo(solutionDirectory).Name;
+    }
+
+    private string GetNamespaceValue(string outputFolder)
+    {
+        return Path.Combine(this.GetSolutionName(), outputFolder);
+    }
+    
 }

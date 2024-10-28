@@ -24,7 +24,8 @@ public class PDFMapper : IMapperPDF
         T result = new T();
         EntityUtils.InitializeDependencyProperties(result);
         if (string.IsNullOrEmpty(pdfContent))
-            throw new ArgumentException("The serialization of the pdf content resulted in invalid content.");
+            throw new ArgumentException(
+                "The serialization of the pdf content resulted in invalid content.");
         
         if (pdfContent.Length > MAX_CONTENT_LENGTH)
         {

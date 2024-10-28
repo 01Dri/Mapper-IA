@@ -19,7 +19,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -51,10 +51,10 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    public async Task<string> SendPrompt(string content)
+    public async Task<string> SendPrompt(string content, string namespaceValue)
     {
         GeminiPromptRequest promptRequest = this.CreatePromptRequest
-            (null, content, true);
+            (null, content, true, namespaceValue);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
 
@@ -86,7 +86,9 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    private GeminiPromptRequest CreatePromptRequest(BaseModelJson? baseModelJson, string content, bool isFileClassMapper)
+    private GeminiPromptRequest CreatePromptRequest(
+        BaseModelJson? baseModelJson, string content,
+        bool isFileClassMapper, string? namespaceValue)
     {
         return new GeminiPromptRequest()
         {
@@ -100,12 +102,13 @@ public class GeminiConverter : BaseConverters, IConverterIA
                         {
                             Text = !isFileClassMapper 
                                 ? DefaultMapperPrompt(baseModelJson, content)
-                                : FileClassConverterPrompt(content)
+                                : FileClassConverterPrompt(content, namespaceValue)
                         }
                     }
                 }
             }
         };
+        
     }
 
     private string ParseJsonResponseIA(GeminiPromptResponse? response)
@@ -132,17 +135,17 @@ public class GeminiConverter : BaseConverters, IConverterIA
 
     private string DefaultMapperPrompt(BaseModelJson baseModelJson, string content)
     {
-        return $"Please return a JSON that strictly follows the structure: {baseModelJson.BaseJson}. " +
-               $"This JSON should be filled with the following values: {content}. \n" +
-               $"If you need to know which attributes are required to fill the JSON, you can check here: {JsonSerializer.Serialize(baseModelJson.Types)}. " +
-               $"If there are any college-related information, please specify the type of college (EAD or in-person), as applicable. " +
-               $"The returned JSON will be used for deserialization, so ensure it is properly formatted for conversion into an object. " +
-               $"The structure and data must adhere to the model. " +
-               $"If any value in the content does not match the structure, do not include that value and return 'null' instead. " +
-               $"Additionally, provide only the JSON directly, without any comments or explanations.";
+        return $"Please return a JSON that strictly follows the structure: {baseModelJson.BaseJson}. \n" +
+               $"1. This JSON should be filled with the following values: {content}. \n" +
+               $"2. If you need to know which attributes are required to fill the JSON, you can check here: {JsonSerializer.Serialize(baseModelJson.Types)}. \n" +
+               $"3. If there are any college-related information, please specify the type of college (EAD or in-person), as applicable. \n" +
+               $"4. The returned JSON will be used for deserialization, so ensure it is properly formatted for conversion into an object. \n" +
+               $"5. The structure and data must adhere to the model. \n" +
+               $"6. If any value in the content does not match the structure, do not include that value and return 'null' instead. \n" +
+               $"7. Additionally, provide only the JSON directly, without any comments or explanations.";
     }
 
-    private string FileClassConverterPrompt(string content)
+    private string FileClassConverterPrompt(string content, string namespaceValue)
     {
         return
             $"Please convert the following Java class into a C# class. " +
@@ -153,6 +156,9 @@ public class GeminiConverter : BaseConverters, IConverterIA
             $"3. Ensure that methods and constructors are converted appropriately. \n" +
             $"4. Include any necessary using directives at the top of the C# file. \n" +
             $"5. The returned C# class should be properly formatted and ready for compilation. \n" +
-            $"6. Do not include any comments or explanations; just return the C# class code. \n";
-    } 
+            $"6. Ensure that the returned C# class has this namespace declaration: 'namespace {namespaceValue};' (with a semicolon at the end and without braces). \n" +
+            $"7. Define properties using auto-implemented syntax, for example: 'public string Name {{ get; set; }}'. \n" +
+            $"8. Do not include any comments or explanations; just return the C# class code. \n";
+    }
+
 }

@@ -1,23 +1,16 @@
 using System;
+namespace MapperIA.Tests.MappedClasses;
 public class Pessoa
 {
-    private string nome;
-    private int idade;
+    public string Nome { get; set; }
+    public int Idade { get; set; }
     public Pessoa(string nome, int idade)
     {
-        this.nome = nome;
-        this.idade = idade;
-    }
-    public string Nome
-    {
-        get { return nome; }
-    }
-    public int Idade
-    {
-        get { return idade; }
+        Nome = nome;
+        Idade = idade;
     }
     public bool IsMaiorDeIdade()
     {
-        return idade >= 18;
+        return Idade >= 18;
     }
 }

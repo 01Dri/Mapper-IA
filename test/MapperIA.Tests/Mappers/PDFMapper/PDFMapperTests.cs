@@ -3,7 +3,7 @@ using MapperIA.Core.Converters.Gemini;
 using MapperIA.Core.Extractors;
 using MapperIA.Core.Interfaces;
 
-namespace Mapper_IA.Tests.Mappers.PDFMapper;
+namespace MapperIA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
 {

@@ -3,7 +3,7 @@ using MapperIA.Core.Configuration;
 using MapperIA.Core.Converters.Gemini;
 using MapperIA.Core.Interfaces;
 
-namespace Mapper_IA.Tests.Mappers.ClassMapper;
+namespace MapperIA.Tests.Mappers.ClassMapper;
 
 public class ClassMapperTests
 {
@@ -86,4 +86,3 @@ public class ClassMapperTests
     }
     
 }
-

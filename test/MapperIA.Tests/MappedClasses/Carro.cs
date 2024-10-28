@@ -1,36 +1,25 @@
 using System;
+namespace MapperIA.Tests.MappedClasses;
 public class Carro
 {
-    private string marca;
-    private string modelo;
-    private int ano;
+    public string Marca { get; set; }
+    public string Modelo { get; set; }
+    public int Ano { get; set; }
     public Carro(string marca, string modelo, int ano)
     {
-        this.marca = marca;
-        this.modelo = modelo;
-        this.ano = ano;
-    }
-    public string Marca
-    {
-        get { return marca; }
-    }
-    public string Modelo
-    {
-        get { return modelo; }
-    }
-    public int Ano
-    {
-        get { return ano; }
+        Marca = marca;
+        Modelo = modelo;
+        Ano = ano;
     }
     public void ExibirInformacoes()
     {
-        Console.WriteLine("Marca: " + marca);
-        Console.WriteLine("Modelo: " + modelo);
-        Console.WriteLine("Ano: " + ano);
+        Console.WriteLine("Marca: " + Marca);
+        Console.WriteLine("Modelo: " + Modelo);
+        Console.WriteLine("Ano: " + Ano);
     }
     public bool IsAntigo()
     {
         int anoAtual = DateTime.Now.Year;
-        return (anoAtual - ano) > 20;
+        return (anoAtual - Ano) > 20;
     }
 }

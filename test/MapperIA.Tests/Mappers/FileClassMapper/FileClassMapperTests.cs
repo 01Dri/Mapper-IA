@@ -3,7 +3,7 @@ using MapperIA.Core.Converters.Gemini;
 using MapperIA.Core.Extractors;
 using MapperIA.Core.Interfaces;
 
-namespace Mapper_IA.Tests.Mappers.FileClassMapper;
+namespace MapperIA.Tests.Mappers.FileClassMapper;
 
 public class FileClassMapperTests
 {
@@ -28,4 +28,3 @@ public class FileClassMapperTests
     }
 
 }
-
