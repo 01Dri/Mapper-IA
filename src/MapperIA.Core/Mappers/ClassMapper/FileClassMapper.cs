@@ -23,6 +23,7 @@ public class FileClassMapper : IFileClassMapper
 
         string defaultSolutionPath = this.GetSolutionDefaultPath();
         string classFileContentJson = this.GetClassFileContent(classFileName);
+        
         string outputFolderPath = Path.Combine(defaultSolutionPath, outputFolder);
         
         string resultContentByPrompt = await _converterIa.SendPrompt(
@@ -30,11 +31,7 @@ public class FileClassMapper : IFileClassMapper
         
         resultContentByPrompt = this.CleanResultContent(resultContentByPrompt);
 
-        string fullOutputFolder =
-            Path.Combine(outputFolderPath,
-                $"{this.GetClassFileNameResult
-                (newClassNameResult,
-                    resultContentByPrompt)}.cs");
+        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, newClassNameResult, resultContentByPrompt);
 
 
         if (!Directory.Exists(outputFolderPath))
@@ -95,5 +92,13 @@ public class FileClassMapper : IFileClassMapper
     {
         return Path.Combine(this.GetSolutionName(), outputFolder);
     }
+
+    private string GetFullOutputFolder(string outputFolderPath, string newClassNameResult, string resultContentByPrompt)
+    {
+        return Path.Combine(outputFolderPath, $"{this.GetClassFileNameResult
+        (newClassNameResult,
+            resultContentByPrompt)}.cs");
+    }
+    
     
 }

@@ -148,17 +148,18 @@ public class GeminiConverter : BaseConverters, IConverterIA
     private string FileClassConverterPrompt(string content, string namespaceValue)
     {
         return
-            $"Please convert the following Java class into a C# class. " +
-            $"The Java class is as follows: {content}. \n" +
-            $"Please ensure the conversion follows these rules: \n" +
-            $"1. Use C# conventions for naming (PascalCase for classes and properties). \n" +
-            $"2. Replace Java types with equivalent C# types (e.g., int -> int, String -> string). \n" +
-            $"3. Ensure that methods and constructors are converted appropriately. \n" +
-            $"4. Include any necessary using directives at the top of the C# file. \n" +
-            $"5. The returned C# class should be properly formatted and ready for compilation. \n" +
-            $"6. Ensure that the returned C# class has this namespace declaration: 'namespace {namespaceValue};' (with a semicolon at the end and without braces). \n" +
-            $"7. Define properties using auto-implemented syntax, for example: 'public string Name {{ get; set; }}'. \n" +
-            $"8. Do not include any comments or explanations; just return the C# class code. \n";
+            $"Please convert the following code into a C# class: \n" +
+            $"The original code is as follows: {content}. \n" +
+            $"Follow these conversion rules: \n" +
+            $"1. Use C# naming conventions (PascalCase for classes and properties). \n" +
+            $"2. Replace any language-specific types with equivalent C# types where applicable (e.g., int, string). \n" +
+            $"3. Ensure methods, properties, and constructors are converted to valid C# syntax. \n" +
+            $"4. Add necessary using directives at the top of the C# file. \n" +
+            $"5. Ensure that the returned C# class is formatted correctly and ready for compilation. \n" +
+            $"6. Set the C# class with the following namespace declaration: 'namespace {namespaceValue};' (without braces). \n" +
+            $"7. Define properties using auto-implemented syntax (e.g., 'public string Name {{ get; set; }}'). \n" +
+            $"8. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
+            $"9. Provide only the converted C# class code without any comments or explanations. \n";
     }
 
 }

@@ -18,13 +18,13 @@ public class FileClassMapperTests
     }
 
     
-    // ACHAR UMA FORMA DE CRIAR O NAMESPACE NA CLASSE
     [Fact]
     public async Task Test()
     {
-        await _fileClassMapper.Map("Test.java", "MappedClasses");
-        await _fileClassMapper.Map("Carro.java", "MappedClasses");
-
+        await _fileClassMapper.Map("Test.java", "MappedClass");
+        await _fileClassMapper.Map("Carro.java", "MappedClass");
+        await _fileClassMapper.Map("ContaBancaria.js", "MappedClass");
+        await _fileClassMapper.Map("Student.py", "MappedClass");
     }
 
 }
