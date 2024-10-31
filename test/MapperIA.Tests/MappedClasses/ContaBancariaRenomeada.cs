@@ -1,12 +1,12 @@
 using System;
 namespace MapperIA.Tests.MappedClasses
 {
-    public class ContaBancaria
+    public class ContaBancariaRenomeada
     {
         public int Numero { get; set; }
         public string Titular { get; set; }
         public decimal Saldo { get; set; }
-        public ContaBancaria(int numero, string titular, decimal saldo = 0)
+        public ContaBancariaRenomeada(int numero, string titular, decimal saldo = 0)
         {
             Numero = numero;
             Titular = titular;

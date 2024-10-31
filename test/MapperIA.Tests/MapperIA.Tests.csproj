@@ -25,4 +25,8 @@
       <ProjectReference Include="..\..\src\MapperIA.Core\MapperIA.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ClCompile Include="Class\Usuario.c++" />
+    </ItemGroup>
+
 </Project>

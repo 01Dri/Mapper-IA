@@ -19,7 +19,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.Options.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null, null);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -36,7 +36,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
                 GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.Options.JsonSerializerOptions);
                 if (responseObject != null)
                 {
-                    T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponseIA(responseObject), this.Options.JsonSerializerOptions);
+                    T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponse(responseObject), this.Options.JsonSerializerOptions);
                     EntityUtils.CopyEntityProperties(objSource, objDestiny);
                     return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
                 }
@@ -51,10 +51,10 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    public async Task<string> SendPrompt(string content, string namespaceValue)
+    public async Task<string> SendPromptFileClassMapper(string content, FileClassMapperOptions options)
     {
         GeminiPromptRequest promptRequest = this.CreatePromptRequest
-            (null, content, true, namespaceValue);
+            (null, content, true, options.NameSpaceValue, options.NewClassFileName);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
 
@@ -91,7 +91,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
 
     private GeminiPromptRequest CreatePromptRequest(
         BaseModelJson? baseModelJson, string content,
-        bool isFileClassMapper, string? namespaceValue)
+        bool isFileClassMapper, string? namespaceValue, string? newClassFileName)
     {
         return new GeminiPromptRequest()
         {
@@ -105,7 +105,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
                         {
                             Text = !isFileClassMapper 
                                 ? DefaultMapperPrompt(baseModelJson, content)
-                                : FileClassConverterPrompt(content, namespaceValue)
+                                : FileClassConverterPrompt(content, namespaceValue, newClassFileName)
                         }
                     }
                 }
@@ -114,7 +114,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
         
     }
 
-    private string ParseJsonResponseIA(GeminiPromptResponse? response)
+    private string ParseJsonResponse(GeminiPromptResponse? response)
     {
         if (response == null) 
             throw new ResponseIAException("The IA response is null.");
@@ -148,8 +148,9 @@ public class GeminiConverter : BaseConverters, IConverterIA
                $"7. Additionally, provide only the JSON directly, without any comments or explanations.";
     }
 
-    private string FileClassConverterPrompt(string content, string namespaceValue)
+    private string FileClassConverterPrompt(string content, string? namespaceValue, string? newClassFileName)
     {
+        
         return
             $"Please convert the following code into a C# class: \n" +
             $"The original code is as follows: {content}. \n" +
@@ -159,10 +160,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
             $"3. Ensure methods, properties, and constructors are converted to valid C# syntax. \n" +
             $"4. Add necessary using directives at the top of the C# file. \n" +
             $"5. Ensure that the returned C# class is formatted correctly and ready for compilation. \n" +
-            $"6. Set the C# class with the following namespace declaration: 'namespace {namespaceValue};' (without braces). \n" +
+            $"6. If the namespace value is not null, set the C# class with the following namespace declaration: 'namespace {namespaceValue};' (without braces). If the namespace value is null, omit the namespace declaration entirely. \n" +
             $"7. Define properties using auto-implemented syntax (e.g., 'public string Name {{ get; set; }}'). \n" +
             $"8. If a property is auto-implemented, do not include any corresponding methods for getting or checking values. \n" +
             $"9. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
-            $"10. Provide only the converted C# class code without any comments or explanations. \n";
+            $"10. If the new class name variable is not null, change the class name to the value sent: {newClassFileName}. \n" +
+            $"11. Provide only the converted C# class code without any comments or explanations. \n";
     }
 }

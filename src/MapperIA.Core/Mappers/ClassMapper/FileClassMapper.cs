@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using MapperIA.Core.Configuration;
 using MapperIA.Core.Helpers;
 using MapperIA.Core.Interfaces;
 
@@ -19,21 +20,15 @@ public class FileClassMapper : IFileClassMapper
         SolutionName = FoldersHelpers.GetSolutionName();
     }
 
-    public async Task<string> Map
-    (
-        string classFileName,
-        string outputFolder,
-        string? newClassFileName = null
-        
-        )
+    public async Task<string> Map(FileClassMapperOptions options)
     {
-        string classFileContentJson = this.GetClassFileContent(classFileName);
-        string outputFolderPath = Path.Combine(SolutionFolderPath, outputFolder);
-        
-        string resultContentByPrompt = await _converterIa.SendPrompt(classFileContentJson, this.GetNamespaceValue(outputFolder));
+        string classFileContentJson = this.GetClassFileContent(options.ClassFileName, options.InputFolder);
+        string outputFolderPath = Path.Combine(SolutionFolderPath, options.OutputFolder);
+        options.NameSpaceValue = this.GetNamespaceValue(options.OutputFolder);
+        string resultContentByPrompt = await _converterIa.SendPromptFileClassMapper(classFileContentJson, options);
         
         resultContentByPrompt = this.CleanResultContent(resultContentByPrompt);
-        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, newClassFileName, resultContentByPrompt);
+        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, options.NewClassFileName, resultContentByPrompt);
 
         if (!Directory.Exists(outputFolderPath))
         {
@@ -61,9 +56,10 @@ public class FileClassMapper : IFileClassMapper
         return newClassNameResult;
     }
 
-    private string GetClassFileContent(string classFileName)
+    private string GetClassFileContent(string classFileName, string? inputFolder)
     {
-        string fullPath = Path.Combine(SolutionFolderPath, "Class", classFileName);
+        if (string.IsNullOrEmpty(inputFolder)) inputFolder = "Class";
+        string fullPath = Path.Combine(SolutionFolderPath, inputFolder, classFileName);
         return  _extractor.ExtractContent(fullPath);
     }
 
@@ -79,8 +75,12 @@ public class FileClassMapper : IFileClassMapper
             .Trim();
     }
 
-    private string GetNamespaceValue(string outputFolder)
+    private string? GetNamespaceValue(string outputFolder)
     {
+        if (FoldersHelpers.GetSolutionDefaultPath().Equals(outputFolder))
+        {
+            return null;
+        }
         return Path.Combine(SolutionName, outputFolder);
     }
 

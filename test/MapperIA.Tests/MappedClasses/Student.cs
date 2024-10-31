@@ -1,3 +1,4 @@
+using System;
 namespace MapperIA.Tests.MappedClasses;
 public class Student
 {
