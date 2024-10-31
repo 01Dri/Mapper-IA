@@ -1,6 +1,7 @@
 ﻿using MapperIA.Core.Configuration;
 using MapperIA.Core.Converters.Gemini;
 using MapperIA.Core.Extractors;
+using MapperIA.Core.Helpers;
 using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Tests.Mappers.FileClassMapper;
@@ -8,6 +9,7 @@ namespace MapperIA.Tests.Mappers.FileClassMapper;
 public class FileClassMapperTests
 {
     private readonly IFileClassMapper _fileClassMapper;
+    private const  string OUTPUT_FOLDER = "MappedClasses";
 
     public  FileClassMapperTests()
     {
@@ -19,12 +21,58 @@ public class FileClassMapperTests
 
     
     [Fact]
-    public async Task Test()
+    public async Task Test_Should_Create_NewClassFile_StudentCs_By_StudentPy()
     {
-        await _fileClassMapper.Map("Test.java", "MappedClass");
-        await _fileClassMapper.Map("Carro.java", "MappedClass");
-        await _fileClassMapper.Map("ContaBancaria.js", "MappedClass");
-        await _fileClassMapper.Map("Student.py", "MappedClass");
+        string fullDirectoryResultPath = this.GetDirectoryResultPath();
+        string fullFileResultPath = this.GetFileResultPath("Student.cs");
+        
+        await _fileClassMapper.Map("Student.py", OUTPUT_FOLDER);
+        
+        Assert.True(Directory.Exists(fullDirectoryResultPath));
+        Assert.True(File.Exists(fullFileResultPath));
+
     }
+    
+    [Fact]
+    public async Task Test_Should_Create_NewClassFile_CarroCs_By_CarroJava()
+    {
+        
+        string fullDirectoryResultPath = this.GetDirectoryResultPath();
+        string fullFileResultPath = this.GetFileResultPath("Carro.cs");
+        
+        await _fileClassMapper.Map("Carro.java", OUTPUT_FOLDER);
+        
+        Assert.True(Directory.Exists(fullDirectoryResultPath));
+        Assert.True(File.Exists(fullFileResultPath));
+
+    }
+    
+    [Fact]
+    public async Task Test_Should_Create_NewClassFile_ContaBancariaCs_By_ContaBancariaJs()
+    {
+        
+        string fullDirectoryResultPath = this.GetDirectoryResultPath();
+        string fullFileResultPath = this.GetFileResultPath("ContaBancaria.cs");
+        
+        await _fileClassMapper.Map("ContaBancaria.js", OUTPUT_FOLDER);
+        
+        Assert.True(Directory.Exists(fullDirectoryResultPath));
+        Assert.True(File.Exists(fullFileResultPath));
+
+    }
+
+
+    private string GetDirectoryResultPath()
+    {
+        string solutionPath = FoldersHelpers.GetSolutionDefaultPath();
+        return Path.Combine(solutionPath, OUTPUT_FOLDER);
+    }
+    
+    private string GetFileResultPath(string classResultName)
+    {
+        string solutionPath = FoldersHelpers.GetSolutionDefaultPath();
+        return  Path.Combine(solutionPath, OUTPUT_FOLDER, classResultName);
+    }
+
 
 }

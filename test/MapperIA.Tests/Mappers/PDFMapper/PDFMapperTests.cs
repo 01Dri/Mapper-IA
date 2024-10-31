@@ -74,6 +74,7 @@ public class PDFMapperTests
         public string Curso { get; set; }
         public string Email { get; set; }
         
+        
         public List<CurriculumProjects> Projects { get; set; }
 
     }

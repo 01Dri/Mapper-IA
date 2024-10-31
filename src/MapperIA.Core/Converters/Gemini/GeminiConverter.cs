@@ -76,8 +76,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
                         ?.Content.Parts.FirstOrDefault()
                         ?.Text ?? throw new ConverterIAException("Unable to convert the destination object.");
                 }
+                throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
+
             }
-            throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
+            
+            throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
 
         }
         catch (Exception ex)
@@ -158,8 +161,8 @@ public class GeminiConverter : BaseConverters, IConverterIA
             $"5. Ensure that the returned C# class is formatted correctly and ready for compilation. \n" +
             $"6. Set the C# class with the following namespace declaration: 'namespace {namespaceValue};' (without braces). \n" +
             $"7. Define properties using auto-implemented syntax (e.g., 'public string Name {{ get; set; }}'). \n" +
-            $"8. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
-            $"9. Provide only the converted C# class code without any comments or explanations. \n";
+            $"8. If a property is auto-implemented, do not include any corresponding methods for getting or checking values. \n" +
+            $"9. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
+            $"10. Provide only the converted C# class code without any comments or explanations. \n";
     }
-
 }

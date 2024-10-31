@@ -2,9 +2,11 @@
 
 public interface IFileClassMapper
 {
-    Task<string> Map(
+    Task<string> Map
+    (
         string classFileName,
-        string exitFolder,
-        string? newClassNameResult=null);
+        string outputFolder,
+        string? newClassFileName=null
+    );
 
 }
