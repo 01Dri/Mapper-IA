@@ -6,7 +6,7 @@ public class ConverterOptions
 {
     public string? Key { get; set; }
     public JsonSerializerOptions? JsonSerializerOptions { get; set; }
-    public string Model { get; set; }
+    public string Model { get; set; } = "gemini-1.5-flash-latest";
     
 
     public ConverterOptions()

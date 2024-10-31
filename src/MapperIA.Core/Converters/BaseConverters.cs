@@ -24,7 +24,6 @@ public abstract class BaseConverters
             };
         }
 
-        if (string.IsNullOrEmpty(converterOptions.Model)) converterOptions.Model = "gemini-1.5-flash-latest";
         HttpClient = new HttpClient();
     }
 }

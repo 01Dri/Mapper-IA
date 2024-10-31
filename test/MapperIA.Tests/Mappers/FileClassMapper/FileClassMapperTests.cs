@@ -101,6 +101,25 @@ public class FileClassMapperTests
 
     }
     
+    [Fact]
+    public async Task Test_Should_Create_NewClassFile_UserCs_By_User_C_PLUS_PLUS_In_Other_InputFolder()
+    {
+     
+        FileClassMapperOptions options = new FileClassMapperOptions("Usuario.c++")
+        {
+            InputFolder = "Class_C_PLUS_PLUS",
+            OutputFolder = "Mapped_C_Plus_Plus"
+        };
+
+        string fullFileResultPath = Path.Combine(FoldersHelpers.GetSolutionDefaultPath(),"Mapped_C_Plus_Plus" , "Usuario.cs");
+        
+        await _fileClassMapper.Map(options);
+        
+        Assert.True(File.Exists(fullFileResultPath));
+
+    }
+
+    
     
     [Fact]
     public void Test_Should_ThrowArgumentException_FileClassName()
@@ -109,8 +128,6 @@ public class FileClassMapperTests
         Assert.Equal("ClassFileName can't be null", exception.Message);
 
     }
-
-
 
 
 

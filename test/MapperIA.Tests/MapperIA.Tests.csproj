@@ -27,6 +27,7 @@
 
     <ItemGroup>
       <ClCompile Include="Class\Usuario.c++" />
+      <ClCompile Include="Class_C_Plus_Plus\Usuario.c++" />
     </ItemGroup>
 
 </Project>
