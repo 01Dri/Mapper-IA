@@ -13,8 +13,8 @@ public class FileClassMapperTests
 
     public  FileClassMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"));
-        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
+        ConverterOptions converterOptions = new ConverterOptions(Environment.GetEnvironmentVariable("GEMINI_KEY"));
+        IConverterIA geminiConverter = new GeminiConverter(converterOptions);
         IExtractor fileClassExtractor = new ClassExtractor(); 
         _fileClassMapper = new MapperIA.Core.Mappers.ClassMapper.FileClassMapper(fileClassExtractor, geminiConverter);
     }

@@ -11,8 +11,8 @@ public class ClassMapperTests
 
     public  ClassMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"));
-        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
+        ConverterOptions converterOptions = new ConverterOptions(Environment.GetEnvironmentVariable("GEMINI_KEY"));
+        IConverterIA geminiConverter = new GeminiConverter(converterOptions);
         _classMapper = new MapperIA.Core.Mappers.ClassMapper.ClassMapper(geminiConverter);
     }
 

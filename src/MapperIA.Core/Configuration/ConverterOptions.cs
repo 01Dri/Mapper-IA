@@ -2,29 +2,29 @@ using System.Text.Json;
 
 namespace MapperIA.Core.Configuration;
 
-public class OptionsIA
+public class ConverterOptions
 {
     public string? Key { get; set; }
     public JsonSerializerOptions? JsonSerializerOptions { get; set; }
     public string Model { get; set; }
     
 
-    public OptionsIA()
+    public ConverterOptions()
     {
     }
 
-    public OptionsIA(string? key)
+    public ConverterOptions(string? key)
     {
         Key = key;
     }
 
-    public OptionsIA(string? key, string model)
+    public ConverterOptions(string? key, string model)
     {
         Key = key;
         Model = model;
     }
 
-    public OptionsIA(string? key, JsonSerializerOptions? jsonSerializerOptions, string model)
+    public ConverterOptions(string? key, JsonSerializerOptions? jsonSerializerOptions, string model)
     {
         Key = key;
         JsonSerializerOptions = jsonSerializerOptions;

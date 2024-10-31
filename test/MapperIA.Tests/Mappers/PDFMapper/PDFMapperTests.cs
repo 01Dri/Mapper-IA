@@ -7,13 +7,13 @@ namespace MapperIA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
 {
-    private readonly OptionsIA _optionsIa;
+    private readonly ConverterOptions _converterOptions;
     private readonly IConverterIA _converterIa;
     public PDFMapperTests()
     {
-        _optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"),
+        _converterOptions = new ConverterOptions(Environment.GetEnvironmentVariable("GEMINI_KEY"),
             "gemini-1.5-flash");
-        _converterIa = new GeminiConverter(_optionsIa);
+        _converterIa = new GeminiConverter(_converterOptions);
     }
 
     [Fact]
