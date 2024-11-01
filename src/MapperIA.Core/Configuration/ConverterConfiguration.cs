@@ -2,29 +2,29 @@ using System.Text.Json;
 
 namespace MapperIA.Core.Configuration;
 
-public class OptionsIA
+public class ConverterConfiguration
 {
     public string? Key { get; set; }
     public JsonSerializerOptions? JsonSerializerOptions { get; set; }
-    public string Model { get; set; }
+    public string Model { get; set; } = "gemini-1.5-flash-latest";
     
 
-    public OptionsIA()
+    public ConverterConfiguration()
     {
     }
 
-    public OptionsIA(string? key)
+    public ConverterConfiguration(string? key)
     {
         Key = key;
     }
 
-    public OptionsIA(string? key, string model)
+    public ConverterConfiguration(string? key, string model)
     {
         Key = key;
         Model = model;
     }
 
-    public OptionsIA(string? key, JsonSerializerOptions? jsonSerializerOptions, string model)
+    public ConverterConfiguration(string? key, JsonSerializerOptions? jsonSerializerOptions, string model)
     {
         Key = key;
         JsonSerializerOptions = jsonSerializerOptions;

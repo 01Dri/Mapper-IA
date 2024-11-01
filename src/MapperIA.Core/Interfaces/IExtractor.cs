@@ -2,6 +2,6 @@
 
 public interface IExtractor
 {
-    string ExtractContent(string pdfPath);
+    string ExtractContent(string path);
 
 }

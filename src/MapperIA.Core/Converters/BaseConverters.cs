@@ -7,24 +7,23 @@ namespace MapperIA.Core.Converters;
 
 public abstract class BaseConverters
 {
-    protected readonly OptionsIA Options;
+    protected readonly ConverterConfiguration ConverterConfiguration;
     protected readonly HttpClient HttpClient;
 
-    protected BaseConverters(OptionsIA optionsIa)
+    protected BaseConverters(ConverterConfiguration converterConfiguration)
     {
-        Options = optionsIa;
+        ConverterConfiguration = converterConfiguration;
         
-        if (string.IsNullOrEmpty(Options.Key)) throw new ApiKeyException("Invalid API Key!");
-        if (optionsIa.JsonSerializerOptions == null)
+        if (string.IsNullOrEmpty(ConverterConfiguration.Key)) throw new ApiKeyException("Invalid API Key!");
+        if (converterConfiguration.JsonSerializerOptions == null)
         {
-            optionsIa.JsonSerializerOptions = new JsonSerializerOptions()
+            converterConfiguration.JsonSerializerOptions = new JsonSerializerOptions()
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.Never, 
                 WriteIndented = true
             };
         }
 
-        if (string.IsNullOrEmpty(optionsIa.Model)) optionsIa.Model = "gemini-1.5-flash-latest";
         HttpClient = new HttpClient();
     }
 }

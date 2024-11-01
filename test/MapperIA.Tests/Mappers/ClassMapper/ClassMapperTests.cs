@@ -3,7 +3,7 @@ using MapperIA.Core.Configuration;
 using MapperIA.Core.Converters.Gemini;
 using MapperIA.Core.Interfaces;
 
-namespace Mapper_IA.Tests.Mappers.ClassMapper;
+namespace MapperIA.Tests.Mappers.ClassMapper;
 
 public class ClassMapperTests
 {
@@ -11,8 +11,8 @@ public class ClassMapperTests
 
     public  ClassMapperTests()
     {
-        OptionsIA optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"));
-        IConverterIA geminiConverter = new GeminiConverter(optionsIa);
+        ConverterConfiguration converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"));
+        IConverterIA geminiConverter = new GeminiConverter(converterConfiguration);
         _classMapper = new MapperIA.Core.Mappers.ClassMapper.ClassMapper(geminiConverter);
     }
 
@@ -86,4 +86,3 @@ public class ClassMapperTests
     }
     
 }
-

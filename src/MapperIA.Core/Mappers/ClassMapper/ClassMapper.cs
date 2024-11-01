@@ -17,7 +17,7 @@ public class ClassMapper : IMapper
     public async Task<TK> Map<T, TK>(T origin) where T : class where TK : class, new()
     {
         TK result = new TK();
-        EntityUtils.InitializeDependencyProperties(result);
+        EntityInitializer.InitializeDependencyProperties(result);
         string originJson = JsonSerializer.Serialize(origin);
         if (string.IsNullOrEmpty(originJson)) 
             throw new ArgumentException("The serialization of the origin resulted in invalid content.",

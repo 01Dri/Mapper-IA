@@ -3,17 +3,17 @@ using MapperIA.Core.Converters.Gemini;
 using MapperIA.Core.Extractors;
 using MapperIA.Core.Interfaces;
 
-namespace Mapper_IA.Tests.Mappers.PDFMapper;
+namespace MapperIA.Tests.Mappers.PDFMapper;
 
 public class PDFMapperTests
 {
-    private readonly OptionsIA _optionsIa;
+    private readonly ConverterConfiguration _converterConfiguration;
     private readonly IConverterIA _converterIa;
     public PDFMapperTests()
     {
-        _optionsIa = new OptionsIA(Environment.GetEnvironmentVariable("GEMINI_KEY"),
+        _converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"),
             "gemini-1.5-flash");
-        _converterIa = new GeminiConverter(_optionsIa);
+        _converterIa = new GeminiConverter(_converterConfiguration);
     }
 
     [Fact]
@@ -73,6 +73,7 @@ public class PDFMapperTests
         public string Faculdade { get; set; }
         public string Curso { get; set; }
         public string Email { get; set; }
+        
         
         public List<CurriculumProjects> Projects { get; set; }
 
