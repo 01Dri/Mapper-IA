@@ -4,6 +4,10 @@
 
 O **Mapper IA** é um projeto que usa inteligência artificial para facilitar o mapeamento de dados. Ele foi criado para simplificar a extração de informações de documentos e permitir que os usuários transformem dados de diferentes fontes em estruturas organizadas e úteis. Neste momento, o Mapper IA já consegue extrair informações de documentos PDF, realizar mapeamentos entre diferentes tipos de classes, e converter arquivos de linguagens diferentes para C#.
 
+**Nota:** Para utilizar o Mapper IA, é necessário ter uma API Key do Gemini.
+
+
+
 ## Funcionalidades Atuais
 
 Atualmente, o **Mapper IA** oferece as seguintes funcionalidades:
@@ -23,7 +27,7 @@ Atualmente, o **Mapper IA** oferece as seguintes funcionalidades:
 Para instalar o **Mapper IA**, você pode utilizar o NuGet:
 
 ```bash
-dotnet add package MapperIA.Core --version 1.0.0
+dotnet add package MapperIA.Core --version 1.0.1
 ```
 
 ## Status do Projeto
