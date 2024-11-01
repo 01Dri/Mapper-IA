@@ -4,7 +4,7 @@ using MapperIA.Core.Models;
 
 namespace MapperIA.Core.Configuration;
 
-public static class EntityUtils
+public static class EntityInitializer
 {
     
     public static void InitializeDependencyProperties<T>(T obj) where T : class

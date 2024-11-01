@@ -14,15 +14,15 @@ public class FileClassMapperOptions
     public FileClassMapperOptions(string classFileName)
     {
         ClassFileName = classFileName;
-        OutputFolder = FoldersHelpers.GetSolutionDefaultPath();
     }
 
     public FileClassMapperOptions(string classFileName, string outputFolder)
     {
-        ClassFileName = classFileName;
-        OutputFolder = outputFolder;
-        if (string.IsNullOrEmpty(ClassFileName)) throw new ArgumentException("ClassFileName can't be null");
+        this.ClassFileName = classFileName;
+        this.OutputFolder = outputFolder;
+        if (string.IsNullOrEmpty(this.ClassFileName)) throw new ArgumentException("ClassFileName can't be null");
     }
+
 
 }
 

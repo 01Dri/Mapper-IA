@@ -22,7 +22,7 @@ public class PDFMapper : IMapperPDF
         string pdfContent = _pdfExtractor.ExtractContent(pdfPath);
         
         T result = new T();
-        EntityUtils.InitializeDependencyProperties(result);
+        EntityInitializer.InitializeDependencyProperties(result);
         if (string.IsNullOrEmpty(pdfContent))
             throw new ArgumentException(
                 "The serialization of the pdf content resulted in invalid content.");

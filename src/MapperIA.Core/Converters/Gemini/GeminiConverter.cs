@@ -18,7 +18,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.ConverterOptions.JsonSerializerOptions);
-        BaseModelJson baseModelJson = EntityUtils.InitializeBaseModel<T>(objDestinyJson);
+        BaseModelJson baseModelJson = EntityInitializer.InitializeBaseModel<T>(objDestinyJson);
         GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null, null);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
@@ -37,7 +37,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
                 if (responseObject != null)
                 {
                     T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponse(responseObject), this.ConverterOptions.JsonSerializerOptions);
-                    EntityUtils.CopyEntityProperties(objSource, objDestiny);
+                    EntityInitializer.CopyEntityProperties(objSource, objDestiny);
                     return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
                 }
 
