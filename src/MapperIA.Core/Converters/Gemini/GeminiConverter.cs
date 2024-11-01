@@ -167,7 +167,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
             $"7. Define properties using auto-implemented syntax (e.g., 'public string Name {{ get; set; }}'). \n" +
             $"8. If a property is auto-implemented, do not include any corresponding methods for getting or checking values. \n" +
             $"9. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
-            $"10. If the new class name variable is not null, change the class name to the value sent: {newClassFileName}. \n" +
+            $"10. If the new class name variable is not null, change the class name to the value sent, new name: {newClassFileName}. \n" +
             $"11. Provide only the converted C# class code without any comments or explanations. \n";
     }
 }
