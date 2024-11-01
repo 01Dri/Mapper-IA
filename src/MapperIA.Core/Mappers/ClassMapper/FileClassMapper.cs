@@ -28,7 +28,7 @@ public class FileClassMapper : IFileClassMapper
         string resultContentByPrompt = await _converterIa.SendPromptFileClassMapper(classFileContentJson, configuration);
         
         resultContentByPrompt = this.CleanResultContent(resultContentByPrompt);
-        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, configuration.NewClassFileName, resultContentByPrompt);
+        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, configuration.NewClassFileName ?? configuration.ClassFileName, resultContentByPrompt);
 
         if (!Directory.Exists(outputFolderPath))
         {
