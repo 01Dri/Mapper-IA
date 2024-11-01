@@ -108,10 +108,11 @@ public class FileClassMapperTests
         FileClassMapperConfiguration configuration = new FileClassMapperConfiguration("Usuario.c++")
         {
             InputFolder = "Class_C_PLUS_PLUS",
-            OutputFolder = "Mapped_C_Plus_Plus"
+            OutputFolder = "Mapped_C_Plus_Plus",
+            NewClassFileName = "UsuarioMapeado" // Isso não está funcionando.
         };
 
-        string fullFileResultPath = Path.Combine(FoldersHelpers.GetSolutionDefaultPath(),"Mapped_C_Plus_Plus" , "Usuario.cs");
+        string fullFileResultPath = Path.Combine(FoldersHelpers.GetSolutionDefaultPath(),"Mapped_C_Plus_Plus" , "UsuarioMapeado.cs");
         
         await _fileClassMapper.Map(configuration);
         
