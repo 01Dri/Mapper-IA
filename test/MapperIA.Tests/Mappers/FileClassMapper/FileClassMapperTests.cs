@@ -108,11 +108,10 @@ public class FileClassMapperTests
         FileClassMapperConfiguration configuration = new FileClassMapperConfiguration("Usuario.c++")
         {
             InputFolder = "Class_C_PLUS_PLUS",
-            OutputFolder = "Mapped_C_Plus_Plus",
-            NewClassFileName = "UsuarioMapeado" // Isso não está funcionando.
+            OutputFolder = "Mapped_C_Plus_Plus"
         };
 
-        string fullFileResultPath = Path.Combine(FoldersHelpers.GetSolutionDefaultPath(),"Mapped_C_Plus_Plus" , "UsuarioMapeado.cs");
+        string fullFileResultPath = Path.Combine(FoldersHelpers.GetSolutionDefaultPath(),"Mapped_C_Plus_Plus" , "Usuario.cs");
         
         await _fileClassMapper.Map(configuration);
         
@@ -126,7 +125,7 @@ public class FileClassMapperTests
     public void Test_Should_ThrowArgumentException_FileClassName()
     {
         var exception = Assert.Throws<ArgumentException>(() => new FileClassMapperConfiguration("", OUTPUT_FOLDER));
-        Assert.Equal("ClassFileName can't be null", exception.Message);
+        Assert.Equal("ClassFileName can't be null or empty", exception.Message);
 
     }
 

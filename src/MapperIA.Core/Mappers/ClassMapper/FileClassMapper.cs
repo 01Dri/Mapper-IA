@@ -24,11 +24,15 @@ public class FileClassMapper : IFileClassMapper
     {
         string classFileContentJson = this.GetClassFileContent(configuration.ClassFileName, configuration.InputFolder);
         string outputFolderPath = Path.Combine(SolutionFolderPath, configuration.OutputFolder);
+        
         configuration.NameSpaceValue = this.GetNamespaceValue(configuration.OutputFolder);
+        configuration.NewClassFileName =
+            this.GetClassFileNameResult(configuration.NewClassFileName, classFileContentJson);
+        
         string resultContentByPrompt = await _converterIa.SendPromptFileClassMapper(classFileContentJson, configuration);
         
         resultContentByPrompt = this.CleanResultContent(resultContentByPrompt);
-        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, configuration.NewClassFileName ?? configuration.ClassFileName, resultContentByPrompt);
+        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, configuration.NewClassFileName);
 
         if (!Directory.Exists(outputFolderPath))
         {
@@ -45,7 +49,7 @@ public class FileClassMapper : IFileClassMapper
 
         if (string.IsNullOrEmpty(newClassNameResult))
         {
-            string pattern = @"class\s+(\w+)\s*{";
+            string pattern = @"\bclass\s+(\w+)(?:\s*{|\s*:|$)";
             Match match = Regex.Match(content, pattern);
             if (match.Success)
             {
@@ -79,16 +83,14 @@ public class FileClassMapper : IFileClassMapper
     {
         if (FoldersHelpers.GetSolutionDefaultPath().Equals(outputFolder))
         {
-            return null;
+            return outputFolder;
         }
         return Path.Combine(SolutionName, outputFolder);
     }
 
-    private string GetFullOutputFolder(string outputFolderPath, string newClassNameResult, string resultContentByPrompt)
+    private string GetFullOutputFolder(string outputFolderPath, string newClassNameResult)
     {
-        return Path.Combine(outputFolderPath, $"{this.GetClassFileNameResult
-        (newClassNameResult,
-            resultContentByPrompt)}.cs");
+        return Path.Combine(outputFolderPath, $"{newClassNameResult}.cs");
     }
     
     
