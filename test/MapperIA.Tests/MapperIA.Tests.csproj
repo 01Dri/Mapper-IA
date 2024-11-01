@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <RootNamespace>Mapper_IA.Tests</RootNamespace>
+        <RootNamespace>MapperIA.Tests</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 
@@ -23,6 +23,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\MapperIA.Core\MapperIA.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ClCompile Include="Class\Usuario.c++" />
+      <ClCompile Include="Class_C_Plus_Plus\Usuario.c++" />
     </ItemGroup>
 
 </Project>

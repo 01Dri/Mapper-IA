@@ -2,7 +2,7 @@
 
 ## Descrição
 
-O **Mapper IA** é um projeto que usa inteligência artificial para facilitar o mapeamento de dados. Ele foi criado para simplificar a extração de informações de documentos e permitir que os usuários transformem dados de diferentes fontes em estruturas organizadas e úteis. Neste momento, o Mapper IA já consegue extrair informações de documentos PDF e também realizar mapeamentos entre diferentes tipos de classes, como converter entidades em DTOs.
+O **Mapper IA** é um projeto que usa inteligência artificial para facilitar o mapeamento de dados. Ele foi criado para simplificar a extração de informações de documentos e permitir que os usuários transformem dados de diferentes fontes em estruturas organizadas e úteis. Neste momento, o Mapper IA já consegue extrair informações de documentos PDF, realizar mapeamentos entre diferentes tipos de classes, e converter arquivos de linguagens diferentes para C#.
 
 ## Funcionalidades Atuais
 
@@ -15,6 +15,8 @@ Atualmente, o **Mapper IA** oferece as seguintes funcionalidades:
    - **Retorno da Classe Preenchida**: O projeto retorna a classe preenchida com os dados extraídos do PDF.
 
 2. **Conversão de classes**: O Mapper IA também permite converter uma classe em outra, facilitando o mapeamento entre entidades e DTOs. Por exemplo, você pode converter um objeto `Usuario` para um `UsuarioDTO` de forma rápida e eficiente.
+
+3. **Conversão de arquivos de linguagens diferentes para C#**: Agora, o Mapper IA também suporta a conversão de arquivos de linguagens diferentes para C#. Por exemplo, você pode converter um arquivo `Student.py` para `Student.cs`. Além disso, é possível alterar o nome da classe durante o processo de conversão.
 
 ## Instalação
 
