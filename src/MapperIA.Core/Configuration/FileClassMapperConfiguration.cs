@@ -14,15 +14,21 @@ public class FileClassMapperConfiguration
     public FileClassMapperConfiguration(string classFileName)
     {
         ClassFileName = classFileName;
+        this.ValidateClassFileName();
+
     }
 
     public FileClassMapperConfiguration(string classFileName, string outputFolder)
     {
         this.ClassFileName = classFileName;
         this.OutputFolder = outputFolder;
-        if (string.IsNullOrEmpty(this.ClassFileName)) throw new ArgumentException("ClassFileName can't be null");
+        this.ValidateClassFileName();
     }
-
+    private void ValidateClassFileName()
+    {
+        if (string.IsNullOrEmpty(ClassFileName))
+            throw new ArgumentException("ClassFileName can't be null or empty");
+    }
 
 }
 

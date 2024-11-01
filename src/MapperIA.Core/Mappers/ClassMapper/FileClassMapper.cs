@@ -43,7 +43,7 @@ public class FileClassMapper : IFileClassMapper
     private string GetClassFileNameResult(string? newClassNameResult, string content)
     {
 
-        if (string.IsNullOrEmpty(newClassNameResult))
+        if (!string.IsNullOrEmpty(newClassNameResult))
         {
             string pattern = @"class\s+(\w+)\s*{";
             Match match = Regex.Match(content, pattern);

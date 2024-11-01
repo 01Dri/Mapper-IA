@@ -29,21 +29,23 @@ public class GeminiConverter : BaseConverters, IConverterIA
                 $"https://generativelanguage.googleapis.com/v1beta" +
                 $"/models/{this.ConverterConfiguration.Model}:generateContent?key={this.ConverterConfiguration.Key}",
                 mediaTypeRequest);
-            
-            if (response.IsSuccessStatusCode)
-            {
-                string responseData = await response.Content.ReadAsStringAsync();
-                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterConfiguration.JsonSerializerOptions);
-                if (responseObject != null)
+
+                if (!response.IsSuccessStatusCode)
                 {
-                    T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponse(responseObject), this.ConverterConfiguration.JsonSerializerOptions);
-                    EntityInitializer.CopyEntityProperties(objSource, objDestiny);
-                    return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
+                    throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
                 }
 
-                throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
-            }
-            throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
+                string responseData = await response.Content.ReadAsStringAsync();
+                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterConfiguration.JsonSerializerOptions);
+                if (responseObject == null)
+                {
+                    throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
+                }
+
+                T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponse(responseObject),
+                        this.ConverterConfiguration.JsonSerializerOptions);
+                    EntityInitializer.CopyEntityProperties(objSource, objDestiny);
+                    return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
         }
         catch (Exception ex)
         {
@@ -60,28 +62,28 @@ public class GeminiConverter : BaseConverters, IConverterIA
 
         try
         {
-            HttpResponseMessage response = await this.HttpClient.PostAsync(
-                $"https://generativelanguage.googleapis.com/v1beta" +
-                $"/models/{this.ConverterConfiguration.Model}:generateContent?key={this.ConverterConfiguration.Key}",
-                mediaTypeRequest);
+                HttpResponseMessage response = await this.HttpClient.PostAsync(
+                    $"https://generativelanguage.googleapis.com/v1beta" +
+                    $"/models/{this.ConverterConfiguration.Model}:generateContent?key={this.ConverterConfiguration.Key}",
+                    mediaTypeRequest);
 
-            if (response.IsSuccessStatusCode)
-            {
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
+
+                }
+
                 string responseData = await response.Content.ReadAsStringAsync();
                 GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterConfiguration.JsonSerializerOptions);
-                if (responseObject != null)
+                if (responseObject == null)
                 {
-                    return responseObject
+                    throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
+                }
+
+                return responseObject
                         .Candidates.FirstOrDefault()
                         ?.Content.Parts.FirstOrDefault()
                         ?.Text ?? throw new ConverterIAException("Unable to convert the destination object.");
-                }
-                throw new FailedToSerializeException("Failed to serialize GeminiPromptResponse");
-
-            }
-            
-            throw new RequestStatusIAException($"Request failed with status: {response.StatusCode}");
-
         }
         catch (Exception ex)
         {
@@ -122,19 +124,20 @@ public class GeminiConverter : BaseConverters, IConverterIA
         var candidate = response.Candidates.FirstOrDefault();
         var part = candidate?.Content.Parts.FirstOrDefault();
         var text = part?.Text;
-        
-        if (!string.IsNullOrEmpty(text))
+
+        if (string.IsNullOrEmpty(text))
         {
-            var cleanedJson = text
+            throw new ResponseIAException("The IA response does not contain any text.");
+        }
+
+        var cleanedJson = text
                 .Replace("```json", string.Empty)
                 .Replace("```", string.Empty)
                 .Replace("\n", string.Empty)
                 .Trim();
             return cleanedJson;
         }
-
-        throw new ResponseIAException("The IA response does not contain any text.");
-    }
+    
 
     private string DefaultMapperPrompt(BaseModelJson baseModelJson, string content)
     {
