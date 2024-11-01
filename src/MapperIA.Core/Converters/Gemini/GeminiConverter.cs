@@ -11,13 +11,13 @@ namespace MapperIA.Core.Converters.Gemini;
 
 public class GeminiConverter : BaseConverters, IConverterIA
 {
-    public GeminiConverter(ConverterOptions converterOptions) : base(converterOptions)
+    public GeminiConverter(ConverterConfiguration converterConfiguration) : base(converterConfiguration)
     {
     }
 
     public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
     {
-        string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.ConverterOptions.JsonSerializerOptions);
+        string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.ConverterConfiguration.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityInitializer.InitializeBaseModel<T>(objDestinyJson);
         GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null, null);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
@@ -27,16 +27,16 @@ public class GeminiConverter : BaseConverters, IConverterIA
         {
             HttpResponseMessage response = await this.HttpClient.PostAsync(
                 $"https://generativelanguage.googleapis.com/v1beta" +
-                $"/models/{this.ConverterOptions.Model}:generateContent?key={this.ConverterOptions.Key}",
+                $"/models/{this.ConverterConfiguration.Model}:generateContent?key={this.ConverterConfiguration.Key}",
                 mediaTypeRequest);
             
             if (response.IsSuccessStatusCode)
             {
                 string responseData = await response.Content.ReadAsStringAsync();
-                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterOptions.JsonSerializerOptions);
+                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterConfiguration.JsonSerializerOptions);
                 if (responseObject != null)
                 {
-                    T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponse(responseObject), this.ConverterOptions.JsonSerializerOptions);
+                    T? objSource = JsonSerializer.Deserialize<T>(this.ParseJsonResponse(responseObject), this.ConverterConfiguration.JsonSerializerOptions);
                     EntityInitializer.CopyEntityProperties(objSource, objDestiny);
                     return objDestiny ?? throw new ConverterIAException("Unable to convert the destination object.");
                 }
@@ -51,10 +51,10 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    public async Task<string> SendPromptFileClassMapper(string content, FileClassMapperOptions options)
+    public async Task<string> SendPromptFileClassMapper(string content, FileClassMapperConfiguration configuration)
     {
         GeminiPromptRequest promptRequest = this.CreatePromptRequest
-            (null, content, true, options.NameSpaceValue, options.NewClassFileName);
+            (null, content, true, configuration.NameSpaceValue, configuration.NewClassFileName);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
 
@@ -62,13 +62,13 @@ public class GeminiConverter : BaseConverters, IConverterIA
         {
             HttpResponseMessage response = await this.HttpClient.PostAsync(
                 $"https://generativelanguage.googleapis.com/v1beta" +
-                $"/models/{this.ConverterOptions.Model}:generateContent?key={this.ConverterOptions.Key}",
+                $"/models/{this.ConverterConfiguration.Model}:generateContent?key={this.ConverterConfiguration.Key}",
                 mediaTypeRequest);
 
             if (response.IsSuccessStatusCode)
             {
                 string responseData = await response.Content.ReadAsStringAsync();
-                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterOptions.JsonSerializerOptions);
+                GeminiPromptResponse? responseObject = JsonSerializer.Deserialize<GeminiPromptResponse>(responseData, this.ConverterConfiguration.JsonSerializerOptions);
                 if (responseObject != null)
                 {
                     return responseObject

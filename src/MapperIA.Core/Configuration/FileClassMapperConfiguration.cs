@@ -2,7 +2,7 @@
 
 namespace MapperIA.Core.Configuration;
 
-public class FileClassMapperOptions
+public class FileClassMapperConfiguration
 {
     public string ClassFileName { get; set; }
     public string OutputFolder { get; set; } = FoldersHelpers.GetSolutionDefaultPath();
@@ -11,12 +11,12 @@ public class FileClassMapperOptions
     public string? NameSpaceValue { get; set; }
     
 
-    public FileClassMapperOptions(string classFileName)
+    public FileClassMapperConfiguration(string classFileName)
     {
         ClassFileName = classFileName;
     }
 
-    public FileClassMapperOptions(string classFileName, string outputFolder)
+    public FileClassMapperConfiguration(string classFileName, string outputFolder)
     {
         this.ClassFileName = classFileName;
         this.OutputFolder = outputFolder;

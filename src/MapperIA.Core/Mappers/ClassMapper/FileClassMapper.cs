@@ -20,15 +20,15 @@ public class FileClassMapper : IFileClassMapper
         SolutionName = FoldersHelpers.GetSolutionName();
     }
 
-    public async Task<string> Map(FileClassMapperOptions options)
+    public async Task<string> Map(FileClassMapperConfiguration configuration)
     {
-        string classFileContentJson = this.GetClassFileContent(options.ClassFileName, options.InputFolder);
-        string outputFolderPath = Path.Combine(SolutionFolderPath, options.OutputFolder);
-        options.NameSpaceValue = this.GetNamespaceValue(options.OutputFolder);
-        string resultContentByPrompt = await _converterIa.SendPromptFileClassMapper(classFileContentJson, options);
+        string classFileContentJson = this.GetClassFileContent(configuration.ClassFileName, configuration.InputFolder);
+        string outputFolderPath = Path.Combine(SolutionFolderPath, configuration.OutputFolder);
+        configuration.NameSpaceValue = this.GetNamespaceValue(configuration.OutputFolder);
+        string resultContentByPrompt = await _converterIa.SendPromptFileClassMapper(classFileContentJson, configuration);
         
         resultContentByPrompt = this.CleanResultContent(resultContentByPrompt);
-        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, options.NewClassFileName, resultContentByPrompt);
+        string fullOutputFolder = this.GetFullOutputFolder(outputFolderPath, configuration.NewClassFileName, resultContentByPrompt);
 
         if (!Directory.Exists(outputFolderPath))
         {

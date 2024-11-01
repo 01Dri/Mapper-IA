@@ -6,7 +6,7 @@ public interface IFileClassMapper
 {
     Task<string> Map
     (
-        FileClassMapperOptions options
+        FileClassMapperConfiguration configuration
     );
 
 }
