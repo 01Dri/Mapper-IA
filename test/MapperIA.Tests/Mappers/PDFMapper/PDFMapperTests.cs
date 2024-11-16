@@ -1,5 +1,6 @@
 ﻿using MapperIA.Core.Configuration;
 using MapperIA.Core.Converters.Gemini;
+using MapperIA.Core.Enums.ModelsIA;
 using MapperIA.Core.Extractors;
 using MapperIA.Core.Interfaces;
 
@@ -11,8 +12,11 @@ public class PDFMapperTests
     private readonly IConverterIA _converterIa;
     public PDFMapperTests()
     {
-        _converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"),
-            "gemini-1.5-flash");
+        _converterConfiguration = new ConverterConfiguration
+        (
+            Environment.GetEnvironmentVariable("GEMINI_KEY"),
+            GeminiModels.FLASH_1_5_PRO.GetValue()
+        );
         _converterIa = new GeminiConverter(_converterConfiguration);
     }
 

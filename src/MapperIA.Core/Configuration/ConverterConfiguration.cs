@@ -1,4 +1,5 @@
 using System.Text.Json;
+using MapperIA.Core.Enums.ModelsIA;
 
 namespace MapperIA.Core.Configuration;
 
@@ -6,7 +7,7 @@ public class ConverterConfiguration
 {
     public string? Key { get; set; }
     public JsonSerializerOptions? JsonSerializerOptions { get; set; }
-    public string Model { get; set; } = "gemini-1.5-flash-latest";
+    public string Model { get; set; } = GeminiModels.FLASH_1_5_LATEST.GetValue();
     
 
     public ConverterConfiguration()
