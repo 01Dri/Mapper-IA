@@ -8,6 +8,7 @@ namespace MapperIA.Core.Converters;
 public abstract class BaseConverters
 {
     protected readonly ConverterConfiguration ConverterConfiguration;
+
     protected readonly HttpClient HttpClient;
 
     protected BaseConverters(ConverterConfiguration converterConfiguration)

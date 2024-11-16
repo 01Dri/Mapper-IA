@@ -1,6 +1,7 @@
 ﻿using Mapper_IA.Tests.Mappers.ClassMapper.ModelsTest;
 using MapperIA.Core.Configuration;
 using MapperIA.Core.Converters.Gemini;
+using MapperIA.Core.Enums.ModelsIA;
 using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Tests.Mappers.ClassMapper;
@@ -11,7 +12,7 @@ public class ClassMapperTests
 
     public  ClassMapperTests()
     {
-        ConverterConfiguration converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"));
+        ConverterConfiguration converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"), GeminiModels.FLASH_1_5_PRO.GetValue());
         IConverterIA geminiConverter = new GeminiConverter(converterConfiguration);
         _classMapper = new MapperIA.Core.Mappers.ClassMapper.ClassMapper(geminiConverter);
     }

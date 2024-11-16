@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using MapperIA.Core.Configuration;
+using MapperIA.Core.Converters.Prompts;
 using MapperIA.Core.Exceptions;
 using MapperIA.Core.Interfaces;
 using MapperIA.Core.Models;
@@ -13,13 +14,16 @@ public class GeminiConverter : BaseConverters, IConverterIA
 {
     public GeminiConverter(ConverterConfiguration converterConfiguration) : base(converterConfiguration)
     {
+        
     }
+    
+    
 
     public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.ConverterConfiguration.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityInitializer.InitializeBaseModel<T>(objDestinyJson);
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null, null);
+        GeminiPromptRequest promptRequest = this.ProcessPromptRequest(content, false, baseModelJson, null);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -52,11 +56,11 @@ public class GeminiConverter : BaseConverters, IConverterIA
             throw new ConverterIAException($"An error occurred during processing: {ex.Message}");
         }
     }
+    
 
     public async Task<string> SendPromptFileClassMapper(string content, FileClassMapperConfiguration configuration)
     {
-        GeminiPromptRequest promptRequest = this.CreatePromptRequest
-            (null, content, true, configuration.NameSpaceValue, configuration.NewClassFileName);
+        GeminiPromptRequest promptRequest = this.ProcessPromptRequest(content, true, null, configuration);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
 
@@ -91,10 +95,39 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    private GeminiPromptRequest CreatePromptRequest(
-        BaseModelJson? baseModelJson, string content,
-        bool isFileClassMapper, string? namespaceValue, string? newClassFileName)
+    private GeminiPromptRequest ProcessPromptRequest(
+        string content,
+        bool isFileClassMapper,
+        BaseModelJson? baseModelJson,
+        FileClassMapperConfiguration? configuration)
     {
+        
+        return  this.CreatePromptRequest
+        (
+            baseModelJson,
+            content,
+            isFileClassMapper,
+            configuration?.NameSpaceValue,
+            configuration?.NewClassFileName
+        );
+        
+    }
+
+    private GeminiPromptRequest CreatePromptRequest
+    (
+        BaseModelJson? baseModelJson,
+        string content,
+        bool isFileClassMapper,
+        string? namespaceValue,
+        string? newClassFileName
+    )
+    {
+        PromptFacade prompt = new PromptFacade(baseModelJson, content);
+        if (isFileClassMapper)
+        {
+            prompt.NameSpaceValue = namespaceValue;
+            prompt.NewClassFileName = newClassFileName;
+        }
         return new GeminiPromptRequest()
         {
             Contents = new List<Contents>
@@ -105,9 +138,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
                     {
                         new Parts()
                         {
-                            Text = !isFileClassMapper 
-                                ? DefaultMapperPrompt(baseModelJson, content)
-                                : FileClassConverterPrompt(content, namespaceValue, newClassFileName)
+                            Text = prompt.CreatePrompt(isFileClassMapper) 
                         }
                     }
                 }
@@ -138,36 +169,4 @@ public class GeminiConverter : BaseConverters, IConverterIA
             return cleanedJson;
         }
     
-
-    private string DefaultMapperPrompt(BaseModelJson baseModelJson, string content)
-    {
-        return $"Please return a JSON that strictly follows the structure: {baseModelJson.BaseJson}. \n" +
-               $"1. This JSON should be filled with the following values: {content}. \n" +
-               $"2. If you need to know which attributes are required to fill the JSON, you can check here: {JsonSerializer.Serialize(baseModelJson.Types)}. \n" +
-               $"3. If there are any college-related information, please specify the type of college (EAD or in-person), as applicable. \n" +
-               $"4. The returned JSON will be used for deserialization, so ensure it is properly formatted for conversion into an object. \n" +
-               $"5. The structure and data must adhere to the model. \n" +
-               $"6. If any value in the content does not match the structure, do not include that value and return 'null' instead. \n" +
-               $"7. Additionally, provide only the JSON directly, without any comments or explanations.";
-    }
-
-    private string FileClassConverterPrompt(string content, string? namespaceValue, string? newClassFileName)
-    {
-        
-        return
-            $"Please convert the following code into a C# class: \n" +
-            $"The original code is as follows: {content}. \n" +
-            $"Follow these conversion rules: \n" +
-            $"1. Use C# naming conventions (PascalCase for classes and properties). \n" +
-            $"2. Replace any language-specific types with equivalent C# types where applicable (e.g., int, string). \n" +
-            $"3. Ensure methods, properties, and constructors are converted to valid C# syntax. \n" +
-            $"4. Add necessary using directives at the top of the C# file. \n" +
-            $"5. Ensure that the returned C# class is formatted correctly and ready for compilation. \n" +
-            $"6. If the namespace value is not null, set the C# class with the following namespace declaration: 'namespace {namespaceValue};' (without braces). If the namespace value is null, omit the namespace declaration entirely. \n" +
-            $"7. Define properties using auto-implemented syntax (e.g., 'public string Name {{ get; set; }}'). \n" +
-            $"8. If a property is auto-implemented, do not include any corresponding methods for getting or checking values. \n" +
-            $"9. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
-            $"10. If the new class name variable is not null, change the class name to the value sent: {newClassFileName}. \n" +
-            $"11. Provide only the converted C# class code without any comments or explanations. \n";
-    }
 }
