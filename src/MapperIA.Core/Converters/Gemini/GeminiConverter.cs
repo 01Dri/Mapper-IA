@@ -14,10 +14,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
 {
     public GeminiConverter(ConverterConfiguration converterConfiguration) : base(converterConfiguration)
     {
-        
     }
-    
-    
 
     public async Task<T> SendPrompt<T>(string content, T objDestiny) where T : class
     {

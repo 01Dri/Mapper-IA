@@ -18,7 +18,8 @@ public class PDFMapper : IMapperPDF
 
 
     public async Task<T> Map<T>(string pdfPath) where T : class, new()
-    {
+    {   
+        
         string pdfContent = _pdfExtractor.ExtractContent(pdfPath);
         
         T result = new T();

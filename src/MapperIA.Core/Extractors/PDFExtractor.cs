@@ -11,7 +11,7 @@ public class PDFExtractor : IExtractor
     {
         if (string.IsNullOrEmpty(pdfPath))
         {
-            throw new ArgumentException("The PDF path cannot be null or empty.", nameof(pdfPath));
+            throw new ArgumentException("The PDF path cannot be null or empty.");
         }
 
         if (!File.Exists(pdfPath))
