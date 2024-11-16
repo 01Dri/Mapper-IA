@@ -25,7 +25,7 @@ public class PromptFacade
     }
 
 
-    public string DefaultMapperPrompt()
+    private string DefaultMapperPrompt()
     {
         return $"Please return a JSON that strictly follows the structure: {BaseModelJson?.BaseJson}. \n" +
                $"1. This JSON should be filled with the following values: {Content}. \n" +
@@ -37,7 +37,7 @@ public class PromptFacade
                $"7. Additionally, provide only the JSON directly, without any comments or explanations.";
     }
 
-    public string FileClassConverterPrompt()
+    private string FileClassConverterPrompt()
     {
         return
             $"Please convert the following code into a C# class: \n" +
