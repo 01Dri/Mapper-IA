@@ -1,43 +1,41 @@
-namespace MapperIA.Tests.MappedClasses
+namespace MapperIA.Tests.MappedClasses;
+public class ContaBancaria
 {
-    public class ContaBancaria
+    public int Numero { get; set; }
+    public string Titular { get; set; }
+    public decimal Saldo { get; set; }
+    public ContaBancaria(int numero, string titular, decimal saldo = 0)
     {
-        public string Numero { get; set; }
-        public string Titular { get; set; }
-        public decimal Saldo { get; set; }
-        public ContaBancaria(string numero, string titular, decimal saldo = 0)
+        Numero = numero;
+        Titular = titular;
+        Saldo = saldo;
+    }
+    public string Depositar(decimal valor)
+    {
+        if (valor > 0)
         {
-            Numero = numero;
-            Titular = titular;
-            Saldo = saldo;
+            Saldo += valor;
+            return $"Depósito de R${valor} realizado com sucesso. Novo saldo: R${Saldo}.";
         }
-        public string Depositar(decimal valor)
+        else
         {
-            if (valor > 0)
-            {
-                Saldo += valor;
-                return $"Depósito de R${valor:F2} realizado com sucesso. Novo saldo: R${Saldo:F2}.";
-            }
-            else
-            {
-                return "Valor de depósito inválido.";
-            }
+            return "Valor de depósito inválido.";
         }
-        public string Sacar(decimal valor)
+    }
+    public string Sacar(decimal valor)
+    {
+        if (valor > 0 && valor <= Saldo)
         {
-            if (valor > 0 && valor <= Saldo)
-            {
-                Saldo -= valor;
-                return $"Saque de R${valor:F2} realizado com sucesso. Saldo restante: R${Saldo:F2}.";
-            }
-            else
-            {
-                return "Saldo insuficiente ou valor de saque inválido.";
-            }
+            Saldo -= valor;
+            return $"Saque de R${valor} realizado com sucesso. Saldo restante: R${Saldo}.";
         }
-        public string ConsultarSaldo()
+        else
         {
-            return $"Saldo atual: R${Saldo:F2}.";
+            return "Saldo insuficiente ou valor de saque inválido.";
         }
+    }
+    public string ConsultarSaldo()
+    {
+        return $"Saldo atual: R${Saldo}.";
     }
 }

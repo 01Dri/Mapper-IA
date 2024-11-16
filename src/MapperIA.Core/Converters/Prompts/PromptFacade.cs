@@ -39,7 +39,6 @@ public class PromptFacade
 
     public string FileClassConverterPrompt()
     {
-        
         return
             $"Please convert the following code into a C# class: \n" +
             $"The original code is as follows: {Content}. \n" +
@@ -49,11 +48,11 @@ public class PromptFacade
             $"3. Ensure methods, properties, and constructors are converted to valid C# syntax. \n" +
             $"4. Add necessary using directives at the top of the C# file. \n" +
             $"5. Ensure that the returned C# class is formatted correctly and ready for compilation. \n" +
-            $"6. If the namespace value is not null, set the C# class with the following namespace declaration: 'namespace {NameSpaceValue};' (without braces). If the namespace value is null, omit the namespace declaration entirely. \n" +
+            $"6. If the namespace value is not null, set the C# class with the following namespace declaration: 'namespace {NameSpaceValue};' (without braces). Ensure the namespace is in the standard C# format, e.g., 'MapperIA.Tests'. If the namespace value is null, omit the namespace declaration entirely. \n" +
             $"7. Define properties using auto-implemented syntax (e.g., 'public string Name {{ get; set; }}'). \n" +
             $"8. If a property is auto-implemented, do not include any corresponding methods for getting or checking values. \n" +
             $"9. Ensure that the new class uses the same language as the original code (e.g., if the original code is in Portuguese, the new class should also be in Portuguese). \n" +
-            $"10. If the new class name variable is not null, change the class name to the value sent: {NewClassFileName}. \n" +
+            $"10. NewClassFileName Value: {NewClassFileName}. If the new class file name value is not null, replace the class name in the original code with the value of the new class file name. \n" +
             $"11. Provide only the converted C# class code without any comments or explanations. \n";
     }
 

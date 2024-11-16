@@ -1,5 +1,6 @@
 ﻿using MapperIA.Core.Configuration;
 using MapperIA.Core.Converters.Gemini;
+using MapperIA.Core.Enums.ModelsIA;
 using MapperIA.Core.Extractors;
 using MapperIA.Core.Helpers;
 using MapperIA.Core.Interfaces;
@@ -13,7 +14,7 @@ public class FileClassMapperTests
 
     public  FileClassMapperTests()
     {
-        ConverterConfiguration converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"));
+        ConverterConfiguration converterConfiguration = new ConverterConfiguration(Environment.GetEnvironmentVariable("GEMINI_KEY"), GeminiModels.FLASH_1_5_PRO.GetValue());
         IConverterIA geminiConverter = new GeminiConverter(converterConfiguration);
         IExtractor fileClassExtractor = new ClassExtractor(); 
         _fileClassMapper = new MapperIA.Core.Mappers.ClassMapper.FileClassMapper(fileClassExtractor, geminiConverter);

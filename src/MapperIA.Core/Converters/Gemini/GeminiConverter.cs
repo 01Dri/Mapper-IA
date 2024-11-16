@@ -23,7 +23,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
     {
         string objDestinyJson = JsonSerializer.Serialize(objDestiny, this.ConverterConfiguration.JsonSerializerOptions);
         BaseModelJson baseModelJson = EntityInitializer.InitializeBaseModel<T>(objDestinyJson);
-        GeminiPromptRequest promptRequest = this.ProcessPromptRequest(content, false, baseModelJson, null);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(baseModelJson, content, false, null);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
         
@@ -60,7 +60,7 @@ public class GeminiConverter : BaseConverters, IConverterIA
 
     public async Task<string> SendPromptFileClassMapper(string content, FileClassMapperConfiguration configuration)
     {
-        GeminiPromptRequest promptRequest = this.ProcessPromptRequest(content, true, null, configuration);
+        GeminiPromptRequest promptRequest = this.CreatePromptRequest(null, content, true, configuration);
         string promptRequestJson = JsonSerializer.Serialize(promptRequest);
         var mediaTypeRequest = new StringContent(promptRequestJson, Encoding.UTF8, "application/json");
 
@@ -95,38 +95,20 @@ public class GeminiConverter : BaseConverters, IConverterIA
         }
     }
 
-    private GeminiPromptRequest ProcessPromptRequest(
-        string content,
-        bool isFileClassMapper,
-        BaseModelJson? baseModelJson,
-        FileClassMapperConfiguration? configuration)
-    {
-        
-        return  this.CreatePromptRequest
-        (
-            baseModelJson,
-            content,
-            isFileClassMapper,
-            configuration?.NameSpaceValue,
-            configuration?.NewClassFileName
-        );
-        
-    }
 
     private GeminiPromptRequest CreatePromptRequest
     (
         BaseModelJson? baseModelJson,
         string content,
         bool isFileClassMapper,
-        string? namespaceValue,
-        string? newClassFileName
+        FileClassMapperConfiguration? configuration
     )
     {
         PromptFacade prompt = new PromptFacade(baseModelJson, content);
         if (isFileClassMapper)
         {
-            prompt.NameSpaceValue = namespaceValue;
-            prompt.NewClassFileName = newClassFileName;
+            prompt.NameSpaceValue = configuration?.NameSpaceValue;
+            prompt.NewClassFileName = configuration?.NewClassFileName;
         }
         return new GeminiPromptRequest()
         {

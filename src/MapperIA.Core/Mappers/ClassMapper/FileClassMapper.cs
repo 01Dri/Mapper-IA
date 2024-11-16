@@ -83,7 +83,7 @@ public class FileClassMapper : IFileClassMapper
     {
         if (FoldersHelpers.GetSolutionDefaultPath().Equals(outputFolder))
         {
-            return outputFolder;
+            return FoldersHelpers.GetSolutionName();
         }
         return Path.Combine(SolutionName, outputFolder);
     }
