@@ -109,7 +109,7 @@ public class FileClassMapperTests
         FileClassMapperConfiguration configuration = new FileClassMapperConfiguration("Usuario.c++")
         {
             InputFolder = "Class_C_PLUS_PLUS",
-            OutputFolder = "Mapped_C_Plus_Plus"
+            OutputFolder = "Mapped_C_Plus_Plus",
         };
 
         string fullFileResultPath = Path.Combine(FoldersHelpers.GetSolutionDefaultPath(),"Mapped_C_Plus_Plus" , "Usuario.cs");
