@@ -107,7 +107,7 @@ public class FileClassMapperTests
     public async Task Test_Should_Create_NewClassFile_UserCs_By_User_C_PLUS_PLUS_In_Other_InputFolder()
     {
          
-        FileClassMapperConfiguration configuration = new FileClassMapperConfiguration("Usuario.c++", "")
+        FileClassMapperConfiguration configuration = new FileClassMapperConfiguration("Usuario.c++", "MapeadorIA")
         {
             InputFolder = "Class_C_PLUS_PLUS",
             OutputFolder = "Mapped_C_Plus_Plus",
