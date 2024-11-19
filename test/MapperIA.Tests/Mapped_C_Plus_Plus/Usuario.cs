@@ -1,5 +1,5 @@
 using System;
-namespace MapperIA.Tests.Mapped_C_Plus_Plus
+namespace Mapped_C_Plus_Plus
 {
     public class Usuario
     {
@@ -14,7 +14,7 @@ namespace MapperIA.Tests.Mapped_C_Plus_Plus
         }
         public void DisplayInfo()
         {
-            Console.WriteLine("Username: " + Username + ", Email: " + Email);
+            Console.WriteLine($"Username: {Username}, Email: {Email}");
         }
     }
 }
