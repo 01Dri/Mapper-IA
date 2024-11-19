@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using MapperIA.Core.Configuration;
 using MapperIA.Core.Helpers;
 using MapperIA.Core.Interfaces;
@@ -16,8 +18,8 @@ public class FileClassMapper : IFileClassMapper
     {
         _extractor = extractor;
         _converterIa = converterIa;
-        SolutionFolderPath = FoldersHelpers.GetSolutionDefaultPath();
-        SolutionName = FoldersHelpers.GetSolutionName();
+        SolutionFolderPath = FoldersHelpers.GetProjectDefaultPath();
+        SolutionName = FoldersHelpers.GetProjectName();
     }
 
     public async Task<string> Map(FileClassMapperConfiguration configuration)
@@ -25,7 +27,7 @@ public class FileClassMapper : IFileClassMapper
         string classFileContentJson = this.GetClassFileContent(configuration.ClassFileName, configuration.InputFolder);
         string outputFolderPath = Path.Combine(SolutionFolderPath, configuration.OutputFolder);
         
-        configuration.NameSpaceValue = this.GetNamespaceValue(configuration.OutputFolder);
+        configuration.NameSpaceValue = this.GetNamespaceValue(configuration.ProjectName,configuration.OutputFolder);
         configuration.NewClassFileName =
             this.GetClassFileNameResult(configuration.NewClassFileName, classFileContentJson);
         
@@ -79,13 +81,10 @@ public class FileClassMapper : IFileClassMapper
             .Trim();
     }
 
-    private string? GetNamespaceValue(string outputFolder)
+    private string? GetNamespaceValue(string solutionName, string outputFolder)
     {
-        if (FoldersHelpers.GetSolutionDefaultPath().Equals(outputFolder))
-        {
-            return FoldersHelpers.GetSolutionName();
-        }
-        return Path.Combine(SolutionName, outputFolder);
+        return Path.Combine(solutionName, outputFolder);
+
     }
 
     private string GetFullOutputFolder(string outputFolderPath, string newClassNameResult)
