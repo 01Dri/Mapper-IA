@@ -2,13 +2,13 @@
 
 public class FoldersHelpers
 {
-    public static string GetSolutionDefaultPath()
+    public static string GetProjectDefaultPath()
     {
         string defaultSolutionPath = AppDomain.CurrentDomain.BaseDirectory;
         return Directory.GetParent(defaultSolutionPath).Parent.Parent.Parent.FullName;
     }
 
-    public static string GetSolutionName()
+    public static string GetProjectName()
     {
         string solutionDirectory = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
         return new DirectoryInfo(solutionDirectory).Name;
