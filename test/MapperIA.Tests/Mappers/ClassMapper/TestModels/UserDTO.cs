@@ -12,7 +12,7 @@ public class UserDTO
     
     public DateTime DataNascimento { get; set; }
 
-    public List<DepartmentDTO> Departments { get; set; }
+    public ICollection<DepartmentDTO> Departments { get; set; }
 
     public List<string>  AddressStreetsNames { get; set; }
 

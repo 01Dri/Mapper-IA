@@ -23,23 +23,25 @@ public class EnumerableInitializer : IDependencyInitializer
                     throw new FailedToInitializeDependenciesException(
                         "Instance of attribute does not implement 'ICollection<object>'");
                 }
-
-                if (listInstance is IEnumerable<string> enumerableList)
+                
+                if (listInstance is IEnumerable<string> stringList)
                 {
-                    var enumerableConvertedToList = enumerableList.ToList();
-                    enumerableConvertedToList.Add("");
-                    listInstance = enumerableConvertedToList.ToList();
+                    stringList.ToList().Add("");
+                    listInstance = stringList;
+
                 }
                 else if (listInstance is IEnumerable<object> objectList)
                 {
-                    var enumerableConvertedToList = objectList.ToList();
                     var itemInstance = Activator.CreateInstance(itemType);
                     if (itemInstance != null)
                     {
-                        enumerableConvertedToList.Add(itemType);
-                        listInstance = enumerableConvertedToList.ToList();
+                        objectList.ToList().Add(itemInstance);
                     }
+
+                    listInstance = objectList;
                 }
+
+
                 property.SetValue(obj, listInstance);
             }
         }
