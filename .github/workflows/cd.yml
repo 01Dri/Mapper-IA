@@ -27,9 +27,9 @@ jobs:
 
 #      - name: Run tests
  #       run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests | FullyQualifiedName~MapperIA.Tests.Mappers.PDFMapper.PDFMapperTests"
- 
+
       - name: Run tests
-        run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests
+        run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests"
 
 
       - name: Publish to NuGet
