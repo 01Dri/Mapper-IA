@@ -25,8 +25,12 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release --no-restore
 
+#      - name: Run tests
+ #       run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests | FullyQualifiedName~MapperIA.Tests.Mappers.PDFMapper.PDFMapperTests"
+ 
       - name: Run tests
-        run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests | FullyQualifiedName~MapperIA.Tests.Mappers.PDFMapper.PDFMapperTests"
+        run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests
+
 
       - name: Publish to NuGet
         env:
