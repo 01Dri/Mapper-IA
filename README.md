@@ -1,6 +1,8 @@
 # Mapper IA
 
-- NUGET: [][]https://www.nuget.org/packages/MapperIA.Core/
+- NUGET: [MapperIA.Core](https://www.nuget.org/packages/MapperIA.Core/)
+
+---
 ## Descrição
 
 O **Mapper IA** é um projeto que usa inteligência artificial para facilitar o mapeamento de dados. Ele foi criado para simplificar a extração de informações de documentos e permitir que os usuários transformem dados de diferentes fontes em estruturas organizadas e úteis. Neste momento, o Mapper IA já consegue extrair informações de documentos PDF, realizar mapeamentos entre diferentes tipos de classes, e converter arquivos de linguagens diferentes para C#.
