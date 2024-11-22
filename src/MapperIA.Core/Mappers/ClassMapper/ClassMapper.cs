@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using MapperIA.Core.Configuration;
+using MapperIA.Core.Initializers;
 using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Core.Mappers.ClassMapper;
@@ -17,7 +17,8 @@ public class ClassMapper : IMapper
     public async Task<TK> Map<T, TK>(T origin) where T : class where TK : class, new()
     {
         TK result = new TK();
-        EntityInitializer.InitializeDependencyProperties(result);
+        new DependencyInitializerFacade(result, new DependencyInitializer())
+            .Initialize();
         string originJson = JsonSerializer.Serialize(origin);
         if (string.IsNullOrEmpty(originJson)) 
             throw new ArgumentException("The serialization of the origin resulted in invalid content.",

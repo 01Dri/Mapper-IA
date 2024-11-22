@@ -1,14 +1,15 @@
-name: Build and Publish Release
+name: Build and Run Tests
 
 on:
   push:
     branches:
-      - main
+      - development
 
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,14 +28,4 @@ jobs:
       - name: Run tests
         run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests | FullyQualifiedName~MapperIA.Tests.Mappers.PDFMapper.PDFMapperTests"
 
-      - name: Publish to NuGet
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: |
-          dotnet nuget push **/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
 
-          VERSION=$(dotnet pack --configuration Release --no-build --output ./bin/Release | grep -oP "(?<=<Version>)(.*?)(?=</Version>)")
-
-          git tag "v$VERSION"
-          
-          git push origin "v$VERSION"
