@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using MapperIA.Core.Configuration;
+using MapperIA.Core.Initializers;
 using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Core.Mappers.PDFMapper;
@@ -23,7 +23,8 @@ public class PDFMapper : IMapperPDF
         string pdfContent = _pdfExtractor.ExtractContent(pdfPath);
         
         T result = new T();
-        EntityInitializer.InitializeDependencyProperties(result);
+        new DependencyInitializerFacade(result, new DependencyInitializer())
+            .Initialize();
         if (string.IsNullOrEmpty(pdfContent))
             throw new ArgumentException(
                 "The serialization of the pdf content resulted in invalid content.");

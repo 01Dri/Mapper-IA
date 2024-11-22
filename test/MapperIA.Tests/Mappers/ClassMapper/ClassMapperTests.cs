@@ -41,7 +41,7 @@ public class ClassMapperTests
         Assert.True(userDto.Ativo);
         Assert.Equal(5000.00m, userDto.Salario);
         Assert.Equal(user.DataNascimento, userDto.DataNascimento);
-        Assert.Equal(user.Enderecos.Count, userDto.Address.Count);
+        Assert.Equal(user.Enderecos.Count, userDto.Address.Count());
         Assert.Equal(user.Departamentos.Count, userDto.Departments.Count);
 
     }

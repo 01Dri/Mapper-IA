@@ -6,13 +6,13 @@ public class UserDTO
     public string Nome { get; set; }
     public int Idade { get; set; }
     public string Email { get; set; }
-    public List<AddressDTO> Address { get; set; } = new List<AddressDTO>();
+    public IEnumerable<AddressDTO> Address { get; set; }
     public bool Ativo { get; set; }
     public decimal Salario { get; set; }
-    
     public DateTime DataNascimento { get; set; }
+    public ICollection<DepartmentDTO> Departments { get; set; }
 
-    public List<DepartmentDTO> Departments { get; set; } = new List<DepartmentDTO>();
+    public List<string>  AddressStreetsNames { get; set; }
 
 
 
