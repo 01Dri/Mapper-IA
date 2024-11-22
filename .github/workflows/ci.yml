@@ -1,0 +1,30 @@
+name: Build and Run Tests
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --filter "FullyQualifiedName~MapperIA.Tests.Mappers.ClassMapper.ClassMapperTests | FullyQualifiedName~MapperIA.Tests.Mappers.PDFMapper.PDFMapperTests"
+
+
