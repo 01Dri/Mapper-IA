@@ -8,7 +8,8 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-
+    env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
