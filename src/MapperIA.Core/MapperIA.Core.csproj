@@ -7,7 +7,9 @@
         <Title>MapperIA-Alpha</Title>
         <Authors>Dridev</Authors>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.1.8-alpha</Version>
+        <Version>1.1.9-alpha</Version>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
     </PropertyGroup>
 
     <ItemGroup>
