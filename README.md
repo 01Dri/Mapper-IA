@@ -27,7 +27,7 @@ Atualmente, o **Mapper IA** oferece as seguintes funcionalidades:
 Para instalar o **Mapper IA**, você pode utilizar o NuGet:
 
 ```bash
-dotnet add package MapperIA.Core --version 1.1.7-alpha
+dotnet add package MapperIA.Core --version 2.0.0-alpha
 ```
 
 ## Status do Projeto
