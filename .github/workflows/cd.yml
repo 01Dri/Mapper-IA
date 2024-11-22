@@ -37,8 +37,4 @@ jobs:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
           dotnet nuget push **/bin/Release/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
-          VERSION=$(dotnet pack --configuration Release --no-build --output ./bin/Release | grep -oP "(?<=<Version>)(.*?)(?=</Version>)")
 
-          git tag "v$VERSION"
-          
-          git push origin "v$VERSION"
