@@ -23,7 +23,7 @@ public class PDFMapper : IMapperPDF
         string pdfContent = _pdfExtractor.ExtractContent(pdfPath);
         
         T result = new T();
-        new DependencyInitializer(result)
+        new DependencyInitializerFacade(result, new DependencyInitializer())
             .Initialize();
         if (string.IsNullOrEmpty(pdfContent))
             throw new ArgumentException(

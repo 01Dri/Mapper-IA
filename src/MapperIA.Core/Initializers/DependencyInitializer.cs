@@ -1,42 +1,39 @@
 ﻿using System.Reflection;
-using MapperIA.Core.Initializers.Dependencies;
+using MapperIA.Core.Interfaces;
 
 namespace MapperIA.Core.Initializers;
 
-public class DependencyInitializer
+public class DependencyInitializer : IDependencyInitializer
 {
-    private object _obj;
-
-    public DependencyInitializer(object obj)
+    public void InitializeDependencyProperties(Type? itemType, PropertyInfo property, object obj)
     {
-        this._obj = obj;
-    }
+        if (itemType == null)
+            throw new ArgumentNullException(nameof(itemType));
 
-    public void Initialize()
-    {
-        var properties = _obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        var listType = typeof(List<>).MakeGenericType(itemType);
+        var listInstance = Activator.CreateInstance(listType);
 
-        foreach (var property in properties)
+        var addMethod = listType.GetMethod("Add");
+        if (addMethod == null)
+            throw new InvalidOperationException("Not found 'Add' method in Generic List!");
+
+        object? itemInstance;
+
+        if (itemType == typeof(string))
         {
-            if (property.PropertyType.IsGenericType)
-            {
-                var type = property.PropertyType.GetGenericTypeDefinition();
-
-                switch (type)
-                {
-                    case var t when t == typeof(IEnumerable<>):
-                        new EnumerableInitializer().InitializeDependencyProperties(this._obj);
-                        break;
-                    case var t when t == typeof(ICollection<>):
-                        new CollectionInitializer().InitializeDependencyProperties(this._obj);
-                        break;
-                    case var t when t == typeof(List<>):
-                        new ListInitializer().InitializeDependencyProperties(this._obj);
-                        break;
-                    default:
-                        throw new ArgumentException("Not any initializer implementation for this property");
-                }
-            }
+            itemInstance = "";
         }
+        else
+        {
+            itemInstance = Activator.CreateInstance(itemType);
+        }
+
+        if (itemInstance != null)
+        {
+            addMethod.Invoke(listInstance, new[] { itemInstance });
+        }
+
+        property.SetValue(obj, listInstance);
     }
+
 }

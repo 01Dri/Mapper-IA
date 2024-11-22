@@ -17,7 +17,7 @@ public class ClassMapper : IMapper
     public async Task<TK> Map<T, TK>(T origin) where T : class where TK : class, new()
     {
         TK result = new TK();
-         new DependencyInitializer(result)
+        new DependencyInitializerFacade(result, new DependencyInitializer())
             .Initialize();
         string originJson = JsonSerializer.Serialize(origin);
         if (string.IsNullOrEmpty(originJson)) 

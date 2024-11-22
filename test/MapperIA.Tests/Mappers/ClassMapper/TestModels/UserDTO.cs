@@ -9,9 +9,7 @@ public class UserDTO
     public IEnumerable<AddressDTO> Address { get; set; }
     public bool Ativo { get; set; }
     public decimal Salario { get; set; }
-    
     public DateTime DataNascimento { get; set; }
-
     public ICollection<DepartmentDTO> Departments { get; set; }
 
     public List<string>  AddressStreetsNames { get; set; }
